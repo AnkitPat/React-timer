@@ -36,6 +36,11 @@ import { translationMessages } from './i18n';
 // Create redux store with history
 const initialState = {};
 const store = configureStore(initialState, history);
+
+// For testing purpose
+store.subscribe(() => {
+  console.log('store: ', store.getState());
+});
 const MOUNT_NODE = document.getElementById('app');
 
 const render = messages => {

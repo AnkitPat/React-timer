@@ -33,9 +33,20 @@ const makeSelectError = () =>
     dashboardState => dashboardState.error,
   );
 
+const makeSelectTasks = () =>
+  createSelector(
+    selectDashboardDomain,
+    dashboardState => dashboardState.tasks,
+  );
+
+export const tasksSelector = createSelector(
+  selectDashboardDomain,
+  dashboardState => dashboardState.tasks,
+);
 export {
   selectDashboardDomain,
   makeSelectProjects,
   makeSelectLoading,
   makeSelectError,
+  makeSelectTasks,
 };

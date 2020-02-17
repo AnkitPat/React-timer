@@ -32,17 +32,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function TaskTimer({ timerStatus, deleteTask }) {
+function TaskTimer({ timerStatus, deleteTask, stopTask }) {
   const classes = useStyles();
 
   const [status, setStatus] = useState(true);
+  const [deleteClick, setDeleteClick] = useState(false);
+  const [startTime, setStartTime] = useState('');
 
   function startTimer() {
     setStatus(false);
-  }
-
-  function stopTimer() {
-    setStatus(true);
+    setStartTime(new Date());
   }
 
   function deleteTimer() {
@@ -50,9 +49,21 @@ function TaskTimer({ timerStatus, deleteTask }) {
     deleteTask();
   }
 
-  const resetTimer = (reset, stop) => {
-    reset();
+  const resetTimer = async (reset, stop) => {
+    await setDeleteClick(true);
     stop();
+    reset();
+  };
+
+  const stopTimer = async (reset, stop) => {
+    stop();
+    reset();
+    setStatus(true);
+    if (!deleteClick) {
+      stopTask(startTime, new Date());
+    }
+    setDeleteClick(false);
+    deleteTimer();
   };
 
   return (
@@ -78,12 +89,15 @@ function TaskTimer({ timerStatus, deleteTask }) {
                   </IconButton>
                 ) : (
                   <>
-                    <IconButton aria-label="stop" onClick={stop}>
+                    <IconButton
+                      aria-label="stop"
+                      onClick={() => stopTimer(reset, stop)}
+                    >
                       <StopIcon color="secondary" />
                     </IconButton>
                     <IconButton
                       aria-label="delete"
-                      onClick={() => resetTimer(reset, stop)}
+                      onClick={async () => resetTimer(reset, stop)}
                     >
                       <DeleteIcon color="primary" />
                     </IconButton>
@@ -101,6 +115,7 @@ function TaskTimer({ timerStatus, deleteTask }) {
 TaskTimer.propTypes = {
   timerStatus: PropTypes.bool,
   deleteTask: PropTypes.func,
+  stopTask: PropTypes.func,
 };
 
 export default TaskTimer;

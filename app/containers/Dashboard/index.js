@@ -17,11 +17,15 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import { makeSelectLoading, makeSelectProjects } from './selectors';
+import {
+  makeSelectLoading,
+  makeSelectProjects,
+  makeSelectTasks,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import TaskTimer from '../../components/TaskTimer';
-import { loadProjects } from './actions';
+import { loadProjects, sortTask } from './actions';
 import ProjectsList from '../../components/ProjectsList';
 
 const useStyles = makeStyles(theme => ({
@@ -38,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Dashboard({ projects, getProjects, loading }) {
+export function Dashboard({ projects, getProjects, saveTask, loading }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
   const classes = useStyles();
@@ -70,6 +74,10 @@ export function Dashboard({ projects, getProjects, loading }) {
     setTimerStatus(true);
   };
 
+  const stopTask = (start, end) => {
+    saveTask(taskName, project, start, end);
+  };
+
   const projectListProps = {
     loading,
     projects,
@@ -80,8 +88,8 @@ export function Dashboard({ projects, getProjects, loading }) {
   const timerProps = {
     timerStatus,
     deleteTask,
+    stopTask,
   };
-
   return (
     <div>
       <Helmet>
@@ -112,17 +120,22 @@ export function Dashboard({ projects, getProjects, loading }) {
 Dashboard.propTypes = {
   projects: PropTypes.array,
   getProjects: PropTypes.func,
+  saveTask: PropTypes.func,
   loading: PropTypes.bool,
+  tasks: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
   projects: makeSelectProjects(),
   loading: makeSelectLoading(),
+  tasks: makeSelectTasks(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     getProjects: () => dispatch(loadProjects()),
+    saveTask: (taskName, projectName, startTime, endTime) =>
+      dispatch(sortTask({ taskName, projectName, startTime, endTime })),
   };
 }
 
