@@ -51,8 +51,12 @@ export function* sortAndSaveTask(action) {
         internalTask.timer = internalTask.timer.concat({
           startTime: task.startTime,
           endTime: task.endTime,
+          duration: Math.abs(new Date(task.startTime) - new Date(task.endTime)),
         });
         internalTask.endTime = task.endTime;
+        internalTask.duration += Math.abs(
+          new Date(task.startTime) - new Date(task.endTime),
+        );
         taskExist = true;
       }
       return internalTask;
@@ -61,7 +65,16 @@ export function* sortAndSaveTask(action) {
     if (!taskExist) {
       task = {
         ...task,
-        timer: [{ startTime: task.startTime, endTime: task.endTime }],
+        duration: Math.abs(new Date(task.startTime) - new Date(task.endTime)),
+        timer: [
+          {
+            startTime: task.startTime,
+            endTime: task.endTime,
+            duration: Math.abs(
+              new Date(task.startTime) - new Date(task.endTime),
+            ),
+          },
+        ],
       };
       tasks = tasks.concat(task);
     }

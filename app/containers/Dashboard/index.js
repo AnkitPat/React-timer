@@ -27,6 +27,8 @@ import saga from './saga';
 import TaskTimer from '../../components/TaskTimer';
 import { loadProjects, sortTask } from './actions';
 import ProjectsList from '../../components/ProjectsList';
+import DateComp from '../../components/DateComp';
+import TasksComponent from '../../components/TasksComponent';
 
 const useStyles = makeStyles(theme => ({
   timeRecorder: {
@@ -42,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Dashboard({ projects, getProjects, saveTask, loading }) {
+export function Dashboard({ tasks, projects, getProjects, saveTask, loading }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
   const classes = useStyles();
@@ -113,6 +115,18 @@ export function Dashboard({ projects, getProjects, saveTask, loading }) {
         </Box>
         <TaskTimer {...timerProps} />
       </Paper>
+
+      {Object.keys(tasks).map(d => {
+        console.log('------>', tasks[d]);
+
+        // let cDate = getDate(d);
+        return (
+          <>
+            <DateComp date={d} tasks={tasks[d]} key={d} />
+            <TasksComponent taskList={tasks[d]} key={tasks[d]} />
+          </>
+        );
+      })}
     </div>
   );
 }

@@ -73,6 +73,7 @@ function TaskTimer({ timerStatus, deleteTask, stopTask }) {
         onStart={() => startTimer()}
         onStop={() => stopTimer()}
         onReset={() => deleteTimer()}
+        formatValue={value => `${value < 10 ? `0${value}` : value}`}
       >
         {({ start, stop, reset }) => (
           <React.Fragment>

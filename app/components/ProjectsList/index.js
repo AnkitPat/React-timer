@@ -16,7 +16,7 @@ function ProjectsList({ loading, projects, handleChange, project }) {
   if (loading) {
     return <LoadingIndicator />;
   }
-
+  console.log(loading, projects, handleChange, project);
   if (projects.length !== 0) {
     return (
       <TextField
@@ -28,7 +28,7 @@ function ProjectsList({ loading, projects, handleChange, project }) {
         className={classes.selectProject}
       >
         {projects.map(item => (
-          <MenuItem value={item.id} key={item.id}>
+          <MenuItem value={item.name} key={item.id}>
             {item.name}
           </MenuItem>
         ))}
