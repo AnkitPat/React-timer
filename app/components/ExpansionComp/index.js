@@ -131,7 +131,8 @@ function ExpansionComp({ task, loading, projects }) {
           <div className={classes.timeStartEnd}>
             <div className={classes.timeStartEndBox}>
               {formatTime(task.startTime)}
-            </div>
+            </div>{' '}
+            -
             <div className={classes.timeStartEndBox}>
               {formatTime(task.endTime)}
             </div>
