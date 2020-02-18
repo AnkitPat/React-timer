@@ -105,6 +105,7 @@ export function Dashboard({
     setTimerStatus(false);
     saveTask(taskName, project, start, end);
   };
+  const inputRef = React.useRef();
 
   const projectListProps = {
     loading,
@@ -128,11 +129,19 @@ export function Dashboard({
         <Box flexGrow="1" className={classes.timeRecorderBox}>
           <form onSubmit={startTimer}>
             <TextField
+              inputRef={inputRef}
               id="standard-basic"
               label="Enter your task"
               onChange={onChangeTaskName}
               value={taskName}
               fullWidth
+              onKeyDown={e => {
+                if (e.keyCode === 13) {
+                  inputRef.current.blur();
+                  setStartTimerClock(true);
+                  startTimer();
+                }
+              }}
             />
           </form>
         </Box>

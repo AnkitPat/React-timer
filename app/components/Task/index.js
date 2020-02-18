@@ -99,6 +99,11 @@ function Task({ task, projects, getProjects, loading, restartTaskCall }) {
           label="Enter your task"
           value={task.taskName}
           fullWidth
+          onKeyDown={e => {
+            if (e.keyCode === 13) {
+              restartTaskCall(task.taskName, project);
+            }
+          }}
         />
       </Box>
       <Box className={classes.timeRecorderBox}>
