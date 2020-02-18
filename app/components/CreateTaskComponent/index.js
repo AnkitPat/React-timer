@@ -41,7 +41,7 @@ function CreateTaskComponent() {
     <div>
       <Paper className={classes.timeRecorder} elevation={1} square>
         <Box flexGrow="1" className={classes.timeRecorderBox}>
-          <TextField id="standard-basic" label="Enter your task" fullWidth />
+          <TextField id="standard-basic" label="Enter your task2" fullWidth />
         </Box>
         <Box className={classes.timeRecorderBox}>
           <TextField

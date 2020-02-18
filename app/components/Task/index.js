@@ -31,27 +31,66 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('md')]: {
+      flexWrap: 'nowrap',
+    },
   },
   timeRecorderBox: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
-  selectProject: {
-    minWidth: '120px',
+  taskNameBox: {
+    width: 'calc(100% - 120px)',
+    maxWidth: 'calc(100% - 120px)',
+    flex: '0 0 calc(100% - 120px)',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+      maxWidth: '100%',
+      flex: '1 0 auto',
+    },
+  },
+  projectBox: {
+    width: '120px',
+    maxWidth: '120px',
+    flex: '0 0 120px',
+    [theme.breakpoints.up('sm')]: {
+      width: '150px',
+      maxWidth: '150px',
+      flex: '0 0 150px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '250px',
+      maxWidth: '250px',
+      flex: '0 0 250px',
+    },
   },
   timeSpinner: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
   },
-  timeSpinnerBox: {
+  startEndBox: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      order: '1',
+    },
+    [theme.breakpoints.up('md')]: {
+      order: '0',
+      width: 'auto',
+    },
+  },
+  divider: {
     padding: theme.spacing(1),
   },
   timeStartEnd: {
     display: 'flex',
     alignItems: 'center',
-  },
-  timeStartEndBox: {
-    padding: theme.spacing(1),
+    justifyContent: 'space-between',
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end',
+    },
   },
   timeLogCounter: {
     cursor: 'pointer',
@@ -93,23 +132,23 @@ function Task({ task, projects, getProjects, loading, restartTaskCall }) {
 
   return (
     <Paper className={classes.timeRecorder} elevation={0} square>
-      <Box flexGrow="1" className={classes.timeRecorderBox}>
+      <Box flexGrow="1" className={[classes.timeRecorderBox, classes.taskNameBox]}>
         <TextField
           id="standard-basic"
-          label="Enter your task"
+          label="Enter your task3"
           value={task.taskName}
           fullWidth
         />
       </Box>
-      <Box className={classes.timeRecorderBox}>
+      <Box className={[classes.timeRecorderBox, classes.projectBox]}>
         <ProjectsList {...projectListProps} />
       </Box>
-      <Box className={classes.timeRecorderBox}>
+      <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
         <div className={classes.timeStartEnd}>
           <div className={classes.timeStartEndBox}>
             {formatTime(task.startTime)}
-          </div>{' '}
-          -
+          </div>
+          <span className={classes.divider}>-</span>
           <div className={classes.timeStartEndBox}>
             {formatTime(task.endTime)}
           </div>
@@ -123,22 +162,20 @@ function Task({ task, projects, getProjects, loading, restartTaskCall }) {
         </div>
       </Box>
       <Box className={classes.timeRecorderBox}>
-        <div className={classes.timeRecorderActions}>
-          <IconButton
-            aria-label="play"
-            onClick={() => {
-              restartTaskCall(task.taskName, project);
-            }}
-          >
-            <PlayArrowIcon color="primary" />
-          </IconButton>
-          <IconButton aria-label="stop">
-            <StopIcon color="secondary" />
-          </IconButton>
-          <IconButton aria-label="delete">
-            <DeleteIcon color="" />
-          </IconButton>
-        </div>
+        <IconButton
+          aria-label="play"
+          onClick={() => {
+            restartTaskCall(task.taskName, project);
+          }}
+        >
+          <PlayArrowIcon color="primary" />
+        </IconButton>
+        <IconButton aria-label="stop">
+          <StopIcon color="secondary" />
+        </IconButton>
+        <IconButton aria-label="delete">
+          <DeleteIcon color="" />
+        </IconButton>
       </Box>
     </Paper>
   );

@@ -19,33 +19,79 @@ import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
 import { formatTime, msConversion } from '../../utils';
+import IconButton from '@material-ui/core/IconButton';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(theme => ({
   timeRecorder: {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('md')]: {
+      flexWrap: 'nowrap',
+    },
   },
   timeRecorderBox: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
   selectProject: {
     minWidth: '120px',
+  },
+  taskNameBox: {
+    width: 'calc(100% - 120px)',
+    maxWidth: 'calc(100% - 120px)',
+    flex: '0 0 calc(100% - 120px)',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+      maxWidth: '100%',
+      flex: '1 0 auto',
+    },
+  },
+  projectBox: {
+    width: '120px',
+    maxWidth: '120px',
+    flex: '0 0 120px',
+    [theme.breakpoints.up('sm')]: {
+      width: '150px',
+      maxWidth: '150px',
+      flex: '0 0 150px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '250px',
+      maxWidth: '250px',
+      flex: '0 0 250px',
+    },
   },
   timeSpinner: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
   },
-  timeSpinnerBox: {
+  startEndBox: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      order: '1',
+    },
+    [theme.breakpoints.up('md')]: {
+      order: '0',
+      width: 'auto',
+    },
+  },
+  divider: {
     padding: theme.spacing(1),
   },
   timeStartEnd: {
     display: 'flex',
     alignItems: 'center',
-  },
-  timeStartEndBox: {
-    padding: theme.spacing(1),
+    justifyContent: 'space-between',
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end',
+    },
   },
   timeLogCounter: {
     cursor: 'pointer',
@@ -55,32 +101,8 @@ const useStyles = makeStyles(theme => ({
     lineHeight: '1',
     borderRadius: theme.spacing(0.5),
   },
-  timeLog: {
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(1),
-  },
-  timeLogTop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    fontSize: '18px',
-  },
-  timeLogTotal: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  timeLogPanel: {
-    position: 'relative',
-  },
-  timeLogPanelBody: {
-    display: 'none',
-  },
   panelSummary: {
     padding: 0,
-  },
-  panelDetails: {
-    padding: 0,
-    flexWrap: 'wrap',
   },
 }));
 
@@ -113,25 +135,25 @@ function ExpansionComp({ task, loading, projects }) {
         <Box className={classes.timeRecorderBox}>
           <div className={classes.timeLogCounter}>{task.timer.length}</div>
         </Box>
-        <Box flexGrow="1" className={classes.timeRecorderBox}>
+        <Box flexGrow="1" className={[classes.timeRecorderBox, classes.taskNameBox]}>
           <TextField
             onClick={event => event.stopPropagation()}
             onFocus={event => event.stopPropagation()}
             id="standard-basic"
-            label="enter your task"
+            label="enter your task1"
             value={task.taskName}
             fullWidth
           />
         </Box>
-        <Box className={classes.timeRecorderBox}>
+        <Box className={[classes.timeRecorderBox, classes.projectBox]}>
           <ProjectsList {...projectListProps} />
         </Box>
-        <Box className={classes.timeRecorderBox}>
+        <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
           <div className={classes.timeStartEnd}>
             <div className={classes.timeStartEndBox}>
               {formatTime(task.startTime)}
-            </div>{' '}
-            -
+            </div>
+            <span className={classes.divider}>-</span>
             <div className={classes.timeStartEndBox}>
               {formatTime(task.endTime)}
             </div>
@@ -145,6 +167,15 @@ function ExpansionComp({ task, loading, projects }) {
           </div>
         </Box>
         <Box className={classes.timeRecorderBox}>
+          <IconButton aria-label="play">
+            <PlayArrowIcon color="primary" />
+          </IconButton>
+          <IconButton aria-label="stop">
+            <StopIcon color="secondary" />
+          </IconButton>
+          <IconButton aria-label="delete">
+            <DeleteIcon color="" />
+          </IconButton>
           {/* <div
             className={classes.timeRecorderActions}
             onClick={event => event.stopPropagation()}

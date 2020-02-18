@@ -37,12 +37,44 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap',
+    },
   },
   timeRecorderBox: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
+    whiteSpace: 'nowrap',
   },
-  selectProject: {
-    minWidth: '120px',
+  taskNameBox: {
+    width: 'calc(100% - 120px)',
+    maxWidth: 'calc(100% - 120px)',
+    flex: '0 0 calc(100% - 120px)',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+      maxWidth: '100%',
+      flex: '1 0 auto',
+    },
+  },
+  projectBox: {
+    width: '120px',
+    maxWidth: '120px',
+    flex: '0 0 120px',
+    [theme.breakpoints.up('sm')]: {
+      width: '150px',
+      maxWidth: '150px',
+      flex: '0 0 150px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '250px',
+      maxWidth: '250px',
+      flex: '0 0 250px',
+    },
+  },
+  timeLog: {
+    marginTop: theme.spacing(4),
+    padding: theme.spacing(1),
   },
 }));
 
@@ -125,7 +157,10 @@ export function Dashboard({
         <meta name="description" content="Description of Dashboard" />
       </Helmet>
       <Paper className={classes.timeRecorder} elevation={1} square>
-        <Box flexGrow="1" className={classes.timeRecorderBox}>
+        <Box
+          flexGrow="1"
+          className={[classes.timeRecorderBox, classes.taskNameBox]}
+        >
           <form onSubmit={startTimer}>
             <TextField
               id="standard-basic"
@@ -136,7 +171,7 @@ export function Dashboard({
             />
           </form>
         </Box>
-        <Box className={classes.timeRecorderBox}>
+        <Box className={[classes.timeRecorderBox, classes.projectBox]}>
           <ProjectsList {...projectListProps} />
         </Box>
         <TaskTimer {...timerProps} restart={startTimerClock} />
@@ -145,10 +180,10 @@ export function Dashboard({
       {Object.keys(tasks).map(d => (
         // let cDate = getDate(d);
 
-        <>
+        <div className={classes.timeLog}>
           <DateComp date={d} tasks={tasks[d]} key={d} />
           <TasksComponent taskList={tasks[d]} key={tasks[d]} />
-        </>
+        </div>
       ))}
     </div>
   );
