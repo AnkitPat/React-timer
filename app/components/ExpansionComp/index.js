@@ -14,7 +14,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { loadProjects } from '../../containers/Dashboard/actions';
+import { IconButton } from '@material-ui/core';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { loadProjects, restartTask } from '../../containers/Dashboard/actions';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
@@ -84,7 +87,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ExpansionComp({ task, loading, projects }) {
+function ExpansionComp({ task, loading, projects, restartTaskCall }) {
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
 
@@ -95,6 +98,7 @@ function ExpansionComp({ task, loading, projects }) {
   const handleChange = event => {
     setProject(event.target.value);
   };
+  const inputRef = React.useRef();
 
   const projectListProps = {
     loading,
@@ -115,12 +119,20 @@ function ExpansionComp({ task, loading, projects }) {
         </Box>
         <Box flexGrow="1" className={classes.timeRecorderBox}>
           <TextField
+            inputRef={inputRef}
             onClick={event => event.stopPropagation()}
             onFocus={event => event.stopPropagation()}
             id="standard-basic"
             label="enter your task"
             value={task.taskName}
             fullWidth
+            onKeyDown={e => {
+              if (e.keyCode === 13) {
+                inputRef.current.blur();
+
+                restartTaskCall(task.taskName, project);
+              }
+            }}
           />
         </Box>
         <Box className={classes.timeRecorderBox}>
@@ -145,21 +157,20 @@ function ExpansionComp({ task, loading, projects }) {
           </div>
         </Box>
         <Box className={classes.timeRecorderBox}>
-          {/* <div
-            className={classes.timeRecorderActions}
-            onClick={event => event.stopPropagation()}
-            onFocus={event => event.stopPropagation()}
-          >
-            <IconButton aria-label="play">
+          <div className={classes.timeRecorderActions}>
+            <IconButton
+              aria-label="play"
+              onClick={() => {
+                restartTaskCall(task.taskName, project);
+              }}
+            >
               <PlayArrowIcon color="primary" />
             </IconButton>
-            <IconButton aria-label="stop">
-              <StopIcon color="secondary" />
-            </IconButton>
+
             <IconButton aria-label="delete">
               <DeleteIcon color="" />
             </IconButton>
-          </div> */}
+          </div>
         </Box>
       </Paper>
     </ExpansionPanelSummary>
@@ -170,6 +181,7 @@ ExpansionComp.propTypes = {
   task: PropTypes.any,
   loading: PropTypes.bool,
   projects: PropTypes.array,
+  restartTaskCall: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -179,6 +191,9 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     getProjects: () => dispatch(loadProjects()),
+
+    restartTaskCall: (taskName, project) =>
+      dispatch(restartTask({ taskName, project })),
   };
 }
 

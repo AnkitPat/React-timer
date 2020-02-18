@@ -90,17 +90,21 @@ function Task({ task, projects, getProjects, loading, restartTaskCall }) {
   };
 
   const classes = useStyles();
+  const inputRef = React.useRef();
 
   return (
     <Paper className={classes.timeRecorder} elevation={0} square>
       <Box flexGrow="1" className={classes.timeRecorderBox}>
         <TextField
+          inputRef={inputRef}
           id="standard-basic"
           label="Enter your task"
           value={task.taskName}
           fullWidth
           onKeyDown={e => {
             if (e.keyCode === 13) {
+              inputRef.current.blur();
+
               restartTaskCall(task.taskName, project);
             }
           }}
