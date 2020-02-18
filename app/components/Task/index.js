@@ -84,6 +84,7 @@ function Task({
 }) {
   useInjectSaga({ key: 'dashboard', saga });
   const [project, setProject] = React.useState(task.projectName);
+  const [taskName, setTaskName] = React.useState(task.taskName);
 
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
@@ -110,13 +111,17 @@ function Task({
           inputRef={inputRef}
           id="standard-basic"
           label="Enter your task"
-          value={task.taskName}
+          value={taskName}
+          onChange={e => setTaskName(e.target.value)}
           fullWidth
+          onBlur={event => {
+            if (event.target.value !== task.taskName) {
+              console.log(event.target.value);
+            }
+          }}
           onKeyDown={e => {
             if (e.keyCode === 13) {
               inputRef.current.blur();
-
-              restartTaskCall(task.taskName, project);
             }
           }}
         />
