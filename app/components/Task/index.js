@@ -23,6 +23,7 @@ import {
   loadProjects,
   restartTask,
   deleteSingleTask,
+  modifyTaskName,
 } from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
 import { formatTime, msConversion } from '../../utils';
@@ -120,6 +121,8 @@ function Task({
   restartTaskCall,
   deleteSingleTaskCall,
   currentDate,
+  modifyTaskNameCall,
+  isPartOfGroup,
 }) {
   useInjectSaga({ key: 'dashboard', saga });
   const [project, setProject] = React.useState(task.projectName);
@@ -159,6 +162,13 @@ function Task({
           onBlur={event => {
             if (event.target.value !== task.taskName) {
               console.log(event.target.value);
+              modifyTaskNameCall(
+                task.taskName,
+                event.target.value,
+                currentDate,
+                isPartOfGroup,
+                task.startTime,
+              );
             }
           }}
           onKeyDown={e => {
@@ -222,6 +232,8 @@ Task.propTypes = {
   restartTaskCall: PropTypes.func,
   deleteSingleTaskCall: PropTypes.func,
   currentDate: PropTypes.string,
+  modifyTaskNameCall: PropTypes.func,
+  isPartOfGroup: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -236,6 +248,23 @@ function mapDispatchToProps(dispatch) {
 
     deleteSingleTaskCall: (taskName, startTime, currentDate) =>
       dispatch(deleteSingleTask({ taskName, currentDate, startTime })),
+
+    modifyTaskNameCall: (
+      taskName,
+      newTaskName,
+      currentDate,
+      isPartOfGroup,
+      startTime,
+    ) =>
+      dispatch(
+        modifyTaskName({
+          taskName,
+          newTaskName,
+          currentDate,
+          isPartOfGroup,
+          startTime,
+        }),
+      ),
   };
 }
 

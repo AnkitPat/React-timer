@@ -11,6 +11,8 @@ import {
   SAVE_TASK,
   DELETE_GROUP_TASK,
   DELETE_SINGLE_TASK,
+  MODIFY_TASK_NAME,
+  MODIFY_TASK_PROJECT_NAME,
 } from './constants';
 import * as selectors from './selectors';
 import { formatDate } from '../../utils';
@@ -45,29 +47,49 @@ export function* sortAndSaveTask(action) {
   try {
     const allTasks = yield select(selectors.tasksSelector);
     let tasks = allTasks[formatDate(new Date())] || [];
-    let task = action.data;
-    let taskExist = false;
+    const task = action.data;
+    tasks = sortTasks(tasks, task);
+    yield put(
+      saveTaskAfterSort({ ...allTasks, [formatDate(new Date())]: tasks }),
+    );
+  } catch (err) {
+    console.error(err);
+  }
+}
 
-    tasks = tasks.map(internalTask => {
-      if (
-        task.taskName === internalTask.taskName &&
-        formatDate(task.startTime) === formatDate(internalTask.startTime)
-      ) {
+function sortTasks(tasks, task) {
+  let taskExist = false;
+
+  tasks = tasks.map(internalTask => {
+    if (
+      task.taskName === internalTask.taskName &&
+      task.project === internalTask.project &&
+      formatDate(task.startTime) === formatDate(internalTask.startTime)
+    ) {
+      if (task.timer && task.timer.length > 1) {
+        internalTask.timer = internalTask.timer.concat(task.timer);
+      } else {
         internalTask.timer = internalTask.timer.concat({
           startTime: task.startTime,
           endTime: task.endTime,
           duration: Math.abs(new Date(task.startTime) - new Date(task.endTime)),
         });
-        internalTask.endTime = task.endTime;
-        internalTask.duration += Math.abs(
-          new Date(task.startTime) - new Date(task.endTime),
-        );
-        taskExist = true;
       }
-      return internalTask;
-    });
+      internalTask.endTime = task.endTime;
+      internalTask.duration += Math.abs(
+        new Date(task.startTime) - new Date(task.endTime),
+      );
+      taskExist = true;
+    }
+    return internalTask;
+  });
 
-    if (!taskExist) {
+  if (!taskExist) {
+    if (task.timer && task.timer.length > 1) {
+      task = {
+        ...task,
+      };
+    } else {
       task = {
         ...task,
         duration: Math.abs(new Date(task.startTime) - new Date(task.endTime)),
@@ -81,14 +103,12 @@ export function* sortAndSaveTask(action) {
           },
         ],
       };
-      tasks = tasks.concat(task);
     }
-    yield put(
-      saveTaskAfterSort({ ...allTasks, [formatDate(new Date())]: tasks }),
-    );
-  } catch (err) {
-    console.error(err);
+
+    tasks = tasks.concat(task);
   }
+
+  return tasks;
 }
 
 /**
@@ -160,6 +180,145 @@ export function* deleteGroupTask(action) {
 }
 
 /**
+ * Modify task name
+ *
+ * @returns {Generator<*, void, ?>}
+ */
+/* eslint-disable default-case, no-param-reassign */
+
+export function* modifyTaskName(action) {
+  try {
+    const allTasks = yield select(selectors.tasksSelector);
+    let tasks = allTasks[action.data.currentDate] || [];
+    const { taskName, newTaskName, isPartOfGroup, startTime } = action.data;
+
+    if (isPartOfGroup) {
+      let newTask = {};
+      tasks = tasks.map(internalTask => {
+        if (taskName === internalTask.taskName) {
+          internalTask.timer = internalTask.timer.filter(time => {
+            if (time.startTime === startTime) {
+              newTask = {
+                taskName: newTaskName,
+                project: internalTask.project,
+                startTime: time.startTime,
+                endTime: time.endTime,
+                duration: Math.abs(
+                  new Date(time.startTime) - new Date(time.endTime),
+                ),
+                timer: [
+                  {
+                    startTime: time.startTime,
+                    endTime: time.endTime,
+                    duration: Math.abs(
+                      new Date(time.startTime) - new Date(time.endTime),
+                    ),
+                  },
+                ],
+              };
+              internalTask.duration -= time.duration;
+              return false;
+            }
+            return true;
+          });
+        }
+        return internalTask;
+      });
+      tasks = sortTasks(tasks, newTask);
+    } else {
+      let taskToEdit = {};
+      tasks = tasks.filter(internalTask => {
+        if (taskName === internalTask.taskName) {
+          internalTask.taskName = newTaskName;
+          taskToEdit = internalTask;
+          return false;
+        }
+        return true;
+      });
+
+      tasks = sortTasks(tasks, taskToEdit);
+    }
+    yield put(
+      saveTaskAfterSort({ ...allTasks, [action.data.currentDate]: tasks }),
+    );
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/**
+ * Modify task project name
+ *
+ * @returns {Generator<*, void, ?>}
+ */
+/* eslint-disable default-case, no-param-reassign */
+
+export function* modifyTaskProjectName(action) {
+  try {
+    const allTasks = yield select(selectors.tasksSelector);
+    let tasks = allTasks[action.data.currentDate] || [];
+    const {
+      projectName,
+      newProjectName,
+      isPartOfGroup,
+      startTime,
+    } = action.data;
+
+    if (isPartOfGroup) {
+      let newTask = {};
+      tasks = tasks.map(internalTask => {
+        if (projectName === internalTask.project) {
+          internalTask.timer = internalTask.timer.filter(time => {
+            if (time.startTime === startTime) {
+              newTask = {
+                taskName: internalTask.taskName,
+                project: newProjectName,
+                startTime: time.startTime,
+                endTime: time.endTime,
+                duration: Math.abs(
+                  new Date(time.startTime) - new Date(time.endTime),
+                ),
+                timer: [
+                  {
+                    startTime: time.startTime,
+                    endTime: time.endTime,
+                    duration: Math.abs(
+                      new Date(time.startTime) - new Date(time.endTime),
+                    ),
+                  },
+                ],
+              };
+              internalTask.duration -= time.duration;
+              return false;
+            }
+            return true;
+          });
+        }
+        return internalTask;
+      });
+      tasks = sortTasks(tasks, newTask);
+    } else {
+      let taskToEdit = {};
+      tasks = tasks.filter(internalTask => {
+        if (projectName === internalTask.project) {
+          internalTask.project = newProjectName;
+          taskToEdit = internalTask;
+          return false;
+        }
+        return true;
+      });
+
+      tasks = sortTasks(tasks, taskToEdit);
+    }
+    yield put(
+      saveTaskAfterSort({ ...allTasks, [action.data.currentDate]: tasks }),
+    );
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/**
  * Root saga manages watcher lifecycle
  */
 export default function* dashboardSaga() {
@@ -171,4 +330,6 @@ export default function* dashboardSaga() {
   yield takeLatest(SAVE_TASK, sortAndSaveTask);
   yield takeLatest(DELETE_SINGLE_TASK, deleteSingleTask);
   yield takeLatest(DELETE_GROUP_TASK, deleteGroupTask);
+  yield takeLatest(MODIFY_TASK_NAME, modifyTaskName);
+  yield takeLatest(MODIFY_TASK_PROJECT_NAME, modifyTaskProjectName);
 }

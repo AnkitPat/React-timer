@@ -13,6 +13,8 @@ import {
   RESTART_TASK,
   DELETE_SINGLE_TASK,
   DELETE_GROUP_TASK,
+  MODIFY_TASK_NAME,
+  MODIFY_TASK_PROJECT_NAME,
 } from './constants';
 
 /**
@@ -113,6 +115,32 @@ export function deleteSingleTask(data) {
 export function deleteGroupTask(data) {
   return {
     type: DELETE_GROUP_TASK,
+    data,
+  };
+}
+
+/**
+ * Action to modify task
+ *
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+export function modifyTaskName(data) {
+  return {
+    type: MODIFY_TASK_NAME,
+    data,
+  };
+}
+
+/**
+ * Action to modify project of task
+ *
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+export function modifyTaskProjectName(data) {
+  return {
+    type: MODIFY_TASK_PROJECT_NAME,
     data,
   };
 }

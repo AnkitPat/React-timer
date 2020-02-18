@@ -21,6 +21,7 @@ import {
   loadProjects,
   restartTask,
   deleteGroupTask,
+  modifyTaskName,
 } from '../../containers/Dashboard/actions';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
@@ -98,9 +99,11 @@ function ExpansionComp({
   restartTaskCall,
   deleteGroupTaskCall,
   currentDate,
+  modifyTaskNameCall,
 }) {
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
+  const [taskName, setTaskName] = React.useState(task.taskName);
 
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
@@ -135,13 +138,24 @@ function ExpansionComp({
             onFocus={event => event.stopPropagation()}
             id="standard-basic"
             label="enter your task"
-            value={task.taskName}
+            value={taskName}
+            onChange={e => setTaskName(e.target.value)}
             fullWidth
+            onBlur={event => {
+              if (event.target.value !== task.taskName) {
+                console.log(event.target.value);
+                modifyTaskNameCall(
+                  task.taskName,
+                  event.target.value,
+                  currentDate,
+                  false,
+                  task.startTime,
+                );
+              }
+            }}
             onKeyDown={e => {
               if (e.keyCode === 13) {
                 inputRef.current.blur();
-
-                restartTaskCall(task.taskName, project);
               }
             }}
           />
@@ -201,6 +215,7 @@ ExpansionComp.propTypes = {
   restartTaskCall: PropTypes.func,
   deleteGroupTaskCall: PropTypes.func,
   currentDate: PropTypes.string,
+  modifyTaskNameCall: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -216,6 +231,22 @@ function mapDispatchToProps(dispatch) {
 
     deleteGroupTaskCall: (taskName, date) =>
       dispatch(deleteGroupTask({ taskName, date })),
+    modifyTaskNameCall: (
+      taskName,
+      newTaskName,
+      currentDate,
+      isPartOfGroup,
+      startTime,
+    ) =>
+      dispatch(
+        modifyTaskName({
+          taskName,
+          newTaskName,
+          currentDate,
+          isPartOfGroup,
+          startTime,
+        }),
+      ),
   };
 }
 

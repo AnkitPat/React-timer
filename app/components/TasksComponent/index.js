@@ -99,6 +99,7 @@ function TasksComponent(props) {
             {task.timer.map(timer => (
               <Task
                 currentDate={props.currentDate}
+                isPartOfGroup
                 task={{
                   ...task,
                   startTime: timer.startTime,
@@ -116,7 +117,11 @@ function TasksComponent(props) {
       display.push(
         <ExpansionPanel key={task.startTime} className={classes.panel}>
           <ExpansionPanelDetails className={classes.panelDetails}>
-            <Task task={task} currentDate={props.currentDate} />
+            <Task
+              task={task}
+              currentDate={props.currentDate}
+              isPartOfGroup={false}
+            />
           </ExpansionPanelDetails>
         </ExpansionPanel>,
       );
