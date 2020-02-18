@@ -83,14 +83,22 @@ function TasksComponent(props) {
 
   const display = [];
 
+  if (props.taskList.length === 0) {
+    console.log(display);
+  }
   props.taskList.map(task => {
     if (task.timer.length > 1) {
       display.push(
         <ExpansionPanel key={task.startTime} className={classes.panel}>
-          <ExpansionComp key={task.timer} task={task} />
+          <ExpansionComp
+            key={task.timer}
+            task={task}
+            currentDate={props.currentDate}
+          />
           <ExpansionPanelDetails className={classes.panelDetails}>
             {task.timer.map(timer => (
               <Task
+                currentDate={props.currentDate}
                 task={{
                   ...task,
                   startTime: timer.startTime,
@@ -102,11 +110,13 @@ function TasksComponent(props) {
           </ExpansionPanelDetails>
         </ExpansionPanel>,
       );
+    } else if (task.timer.length === 0) {
+      console.log(display);
     } else {
       display.push(
         <ExpansionPanel key={task.startTime} className={classes.panel}>
           <ExpansionPanelDetails className={classes.panelDetails}>
-            <Task task={task} />
+            <Task task={task} currentDate={props.currentDate} />
           </ExpansionPanelDetails>
         </ExpansionPanel>,
       );
@@ -115,11 +125,16 @@ function TasksComponent(props) {
     return task;
   });
 
-  return <div className={classes.timeLogPanel}>{display}</div>;
+  return display.length > 0 ? (
+    <div className={classes.timeLogPanel}>{display}</div>
+  ) : (
+    <div />
+  );
 }
 
 TasksComponent.propTypes = {
   taskList: PropTypes.array,
+  currentDate: PropTypes.string,
 };
 
 export default TasksComponent;

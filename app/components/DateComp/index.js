@@ -53,7 +53,8 @@ function DateComp(props) {
     totalDuration += task.duration;
     return task;
   });
-  return (
+
+  return props.tasks.length > 0 ? (
     <div className={classes.timeLogTop}>
       <div className={classes.timeLogDate}>{props.date}</div>
       <div className={classes.timeLogTotal}>
@@ -65,6 +66,8 @@ function DateComp(props) {
         </div>
       </div>
     </div>
+  ) : (
+    <div />
   );
 }
 

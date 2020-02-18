@@ -17,7 +17,11 @@ import { createStructuredSelector } from 'reselect';
 import { IconButton } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { loadProjects, restartTask } from '../../containers/Dashboard/actions';
+import {
+  loadProjects,
+  restartTask,
+  deleteGroupTask,
+} from '../../containers/Dashboard/actions';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
@@ -87,7 +91,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ExpansionComp({ task, loading, projects, restartTaskCall }) {
+function ExpansionComp({
+  task,
+  loading,
+  projects,
+  restartTaskCall,
+  deleteGroupTaskCall,
+  currentDate,
+}) {
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
 
@@ -167,7 +178,13 @@ function ExpansionComp({ task, loading, projects, restartTaskCall }) {
               <PlayArrowIcon color="primary" />
             </IconButton>
 
-            <IconButton aria-label="delete">
+            <IconButton
+              aria-label="delete"
+              onClick={() => {
+                console.log(currentDate);
+                deleteGroupTaskCall(task.taskName, currentDate);
+              }}
+            >
               <DeleteIcon color="" />
             </IconButton>
           </div>
@@ -182,6 +199,8 @@ ExpansionComp.propTypes = {
   loading: PropTypes.bool,
   projects: PropTypes.array,
   restartTaskCall: PropTypes.func,
+  deleteGroupTaskCall: PropTypes.func,
+  currentDate: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -194,6 +213,9 @@ function mapDispatchToProps(dispatch) {
 
     restartTaskCall: (taskName, project) =>
       dispatch(restartTask({ taskName, project })),
+
+    deleteGroupTaskCall: (taskName, date) =>
+      dispatch(deleteGroupTask({ taskName, date })),
   };
 }
 

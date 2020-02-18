@@ -11,6 +11,8 @@ import {
   SAVE_TASK,
   SAVE_TASK_AFTER_SORT,
   RESTART_TASK,
+  DELETE_SINGLE_TASK,
+  DELETE_GROUP_TASK,
 } from './constants';
 
 /**
@@ -85,6 +87,32 @@ export function saveTaskAfterSort(data) {
 export function restartTask(data) {
   return {
     type: RESTART_TASK,
+    data,
+  };
+}
+
+/**
+ * Dispatched when delete single taskl
+ *
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+export function deleteSingleTask(data) {
+  return {
+    type: DELETE_SINGLE_TASK,
+    data,
+  };
+}
+
+/**
+ * Dispatched when delete group task
+ *
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+export function deleteGroupTask(data) {
+  return {
+    type: DELETE_GROUP_TASK,
     data,
   };
 }

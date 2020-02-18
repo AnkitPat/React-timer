@@ -12,7 +12,6 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
@@ -20,7 +19,11 @@ import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
-import { loadProjects, restartTask } from '../../containers/Dashboard/actions';
+import {
+  loadProjects,
+  restartTask,
+  deleteSingleTask,
+} from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
 import { formatTime, msConversion } from '../../utils';
 // import PropTypes from 'prop-types';
@@ -70,7 +73,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Task({ task, projects, getProjects, loading, restartTaskCall }) {
+function Task({
+  task,
+  projects,
+  getProjects,
+  loading,
+  restartTaskCall,
+  deleteSingleTaskCall,
+  currentDate,
+}) {
   useInjectSaga({ key: 'dashboard', saga });
   const [project, setProject] = React.useState(task.projectName);
 
@@ -141,10 +152,13 @@ function Task({ task, projects, getProjects, loading, restartTaskCall }) {
           >
             <PlayArrowIcon color="primary" />
           </IconButton>
-          <IconButton aria-label="stop">
-            <StopIcon color="secondary" />
-          </IconButton>
-          <IconButton aria-label="delete">
+
+          <IconButton
+            aria-label="delete"
+            onClick={() => {
+              deleteSingleTaskCall(task.taskName, task.startTime, currentDate);
+            }}
+          >
             <DeleteIcon color="" />
           </IconButton>
         </div>
@@ -159,6 +173,8 @@ Task.propTypes = {
   getProjects: PropTypes.func,
   loading: PropTypes.bool,
   restartTaskCall: PropTypes.func,
+  deleteSingleTaskCall: PropTypes.func,
+  currentDate: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -170,6 +186,9 @@ function mapDispatchToProps(dispatch) {
     getProjects: () => dispatch(loadProjects()),
     restartTaskCall: (taskName, project) =>
       dispatch(restartTask({ taskName, project })),
+
+    deleteSingleTaskCall: (taskName, startTime, currentDate) =>
+      dispatch(deleteSingleTask({ taskName, currentDate, startTime })),
   };
 }
 
