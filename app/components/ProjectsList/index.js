@@ -7,7 +7,7 @@ import LoadingIndicator from '../LoadingIndicator';
 
 const useStyles = makeStyles(() => ({
   selectProject: {
-    minWidth: '120px',
+    width: '100%',
   },
 }));
 

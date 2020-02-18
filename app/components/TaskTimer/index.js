@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   timeStartEndBox: {
     padding: theme.spacing(1),
   },
+  timeRecorderBox: {
+    padding: theme.spacing(1),
+  },
 }));
 
 function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {

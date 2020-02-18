@@ -10,25 +10,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { msConversion } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
-  timeRecorder: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-  },
   timeSpinner: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
   },
   timeSpinnerBox: {
-    padding: theme.spacing(1),
-  },
-  timeStartEnd: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  timeLog: {
-    marginTop: theme.spacing(4),
     padding: theme.spacing(1),
   },
   timeLogTop: {
