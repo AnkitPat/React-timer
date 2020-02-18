@@ -102,7 +102,6 @@ function ExpansionComp({ task, loading, projects }) {
     project,
     handleChange,
   };
-  console.log('ExpansionComp --- >', task.timer);
   return (
     <ExpansionPanelSummary
       className={classes.panelSummary}

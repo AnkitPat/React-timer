@@ -79,7 +79,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function TasksComponent(props) {
-  console.log('TaskComponent--->', props.taskList);
   const classes = useStyles();
 
   const display = [];
@@ -87,7 +86,7 @@ function TasksComponent(props) {
   props.taskList.map(task => {
     if (task.timer.length > 1) {
       display.push(
-        <ExpansionPanel className={classes.panel}>
+        <ExpansionPanel key={task.startTime} className={classes.panel}>
           <ExpansionComp key={task.timer} task={task} />
           <ExpansionPanelDetails className={classes.panelDetails}>
             {task.timer.map(timer => (
@@ -105,7 +104,7 @@ function TasksComponent(props) {
       );
     } else {
       display.push(
-        <ExpansionPanel className={classes.panel}>
+        <ExpansionPanel key={task.startTime} className={classes.panel}>
           <ExpansionPanelDetails className={classes.panelDetails}>
             <Task task={task} />
           </ExpansionPanelDetails>

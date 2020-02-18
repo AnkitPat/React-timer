@@ -16,7 +16,6 @@ function ProjectsList({ loading, projects, handleChange, project }) {
   if (loading) {
     return <LoadingIndicator />;
   }
-  console.log(loading, projects, handleChange, project);
   if (projects.length !== 0) {
     return (
       <TextField

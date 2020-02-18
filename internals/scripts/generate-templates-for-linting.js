@@ -79,7 +79,6 @@ function feedbackToUser(info) {
  */
 function reportSuccess(message) {
   return result => {
-    addCheckmark(() => console.log(chalk.green(` ${message}`)));
     return result;
   };
 }

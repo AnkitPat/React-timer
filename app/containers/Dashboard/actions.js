@@ -10,6 +10,7 @@ import {
   LOAD_PROJECTS_SUCCESS,
   SAVE_TASK,
   SAVE_TASK_AFTER_SORT,
+  RESTART_TASK,
 } from './constants';
 
 /**
@@ -71,6 +72,19 @@ export function sortTask(data) {
 export function saveTaskAfterSort(data) {
   return {
     type: SAVE_TASK_AFTER_SORT,
+    data,
+  };
+}
+
+/**
+ * Dispatched when restart task
+ *
+ * @param error
+ * @returns {{type: string, error: *}}
+ */
+export function restartTask(data) {
+  return {
+    type: RESTART_TASK,
     data,
   };
 }

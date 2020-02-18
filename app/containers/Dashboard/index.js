@@ -17,15 +17,17 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import { isEmpty, has } from 'lodash';
 import {
   makeSelectLoading,
   makeSelectProjects,
   makeSelectTasks,
+  makeRestartTaskData,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import TaskTimer from '../../components/TaskTimer';
-import { loadProjects, sortTask } from './actions';
+import { loadProjects, sortTask, restartTask } from './actions';
 import ProjectsList from '../../components/ProjectsList';
 import DateComp from '../../components/DateComp';
 import TasksComponent from '../../components/TasksComponent';
@@ -44,7 +46,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Dashboard({ tasks, projects, getProjects, saveTask, loading }) {
+export function Dashboard({
+  tasks,
+  projects,
+  getProjects,
+  saveTask,
+  loading,
+  restartTaskData,
+  restartTaskCall,
+}) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
   const classes = useStyles();
@@ -52,11 +62,24 @@ export function Dashboard({ tasks, projects, getProjects, saveTask, loading }) {
   const [project, setProject] = React.useState('');
   const [taskName, setTaskName] = React.useState('');
   const [timerStatus, setTimerStatus] = React.useState(true);
+  const [startTimerClock, setStartTimerClock] = React.useState(false);
 
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
     getProjects();
+
+    if (
+      !isEmpty(restartTaskData) &&
+      has(restartTaskData, 'taskName') &&
+      restartTaskData.taskName !== undefined
+    ) {
+      setTaskName(restartTaskData.taskName);
+      setProject(restartTaskData.project);
+      setStartTimerClock(true);
+      restartTaskCall('', '');
+    }
   });
+
   const handleChange = event => {
     setProject(event.target.value);
   };
@@ -74,9 +97,12 @@ export function Dashboard({ tasks, projects, getProjects, saveTask, loading }) {
     setTaskName('');
     setProject('');
     setTimerStatus(true);
+    setStartTimerClock(false);
   };
 
   const stopTask = (start, end) => {
+    setStartTimerClock(false);
+    setTimerStatus(false);
     saveTask(taskName, project, start, end);
   };
 
@@ -113,20 +139,17 @@ export function Dashboard({ tasks, projects, getProjects, saveTask, loading }) {
         <Box className={classes.timeRecorderBox}>
           <ProjectsList {...projectListProps} />
         </Box>
-        <TaskTimer {...timerProps} />
+        <TaskTimer {...timerProps} restart={startTimerClock} />
       </Paper>
 
-      {Object.keys(tasks).map(d => {
-        console.log('------>', tasks[d]);
-
+      {Object.keys(tasks).map(d => (
         // let cDate = getDate(d);
-        return (
-          <>
-            <DateComp date={d} tasks={tasks[d]} key={d} />
-            <TasksComponent taskList={tasks[d]} key={tasks[d]} />
-          </>
-        );
-      })}
+
+        <>
+          <DateComp date={d} tasks={tasks[d]} key={d} />
+          <TasksComponent taskList={tasks[d]} key={tasks[d]} />
+        </>
+      ))}
     </div>
   );
 }
@@ -137,12 +160,15 @@ Dashboard.propTypes = {
   saveTask: PropTypes.func,
   loading: PropTypes.bool,
   tasks: PropTypes.array,
+  restartTaskCall: PropTypes.func,
+  restartTaskData: PropTypes.any,
 };
 
 const mapStateToProps = createStructuredSelector({
   projects: makeSelectProjects(),
   loading: makeSelectLoading(),
   tasks: makeSelectTasks(),
+  restartTaskData: makeRestartTaskData(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -150,6 +176,9 @@ function mapDispatchToProps(dispatch) {
     getProjects: () => dispatch(loadProjects()),
     saveTask: (taskName, projectName, startTime, endTime) =>
       dispatch(sortTask({ taskName, projectName, startTime, endTime })),
+
+    restartTaskCall: () =>
+      dispatch(restartTask({ taskName: undefined, project: undefined })),
   };
 }
 

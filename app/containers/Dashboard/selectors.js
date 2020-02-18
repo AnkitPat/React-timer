@@ -39,14 +39,22 @@ const makeSelectTasks = () =>
     dashboardState => dashboardState.tasks,
   );
 
+const makeRestartTaskData = () =>
+  createSelector(
+    selectDashboardDomain,
+    dashboardState => dashboardState.restartTaskData,
+  );
+
 export const tasksSelector = createSelector(
   selectDashboardDomain,
   dashboardState => dashboardState.tasks,
 );
+
 export {
   selectDashboardDomain,
   makeSelectProjects,
   makeSelectLoading,
   makeSelectError,
   makeSelectTasks,
+  makeRestartTaskData,
 };

@@ -20,7 +20,7 @@ import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
-import { loadProjects } from '../../containers/Dashboard/actions';
+import { loadProjects, restartTask } from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
 import { formatTime, msConversion } from '../../utils';
 // import PropTypes from 'prop-types';
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Task({ task, projects, getProjects, loading }) {
+function Task({ task, projects, getProjects, loading, restartTaskCall }) {
   useInjectSaga({ key: 'dashboard', saga });
   const [project, setProject] = React.useState(task.projectName);
 
@@ -91,7 +91,6 @@ function Task({ task, projects, getProjects, loading }) {
 
   const classes = useStyles();
 
-  console.log('TASK COMP ----->props: ', task);
   return (
     <Paper className={classes.timeRecorder} elevation={0} square>
       <Box flexGrow="1" className={classes.timeRecorderBox}>
@@ -125,7 +124,12 @@ function Task({ task, projects, getProjects, loading }) {
       </Box>
       <Box className={classes.timeRecorderBox}>
         <div className={classes.timeRecorderActions}>
-          <IconButton aria-label="play">
+          <IconButton
+            aria-label="play"
+            onClick={() => {
+              restartTaskCall(task.taskName, project);
+            }}
+          >
             <PlayArrowIcon color="primary" />
           </IconButton>
           <IconButton aria-label="stop">
@@ -145,6 +149,7 @@ Task.propTypes = {
   projects: PropTypes.array,
   getProjects: PropTypes.func,
   loading: PropTypes.bool,
+  restartTaskCall: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -154,6 +159,8 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     getProjects: () => dispatch(loadProjects()),
+    restartTaskCall: (taskName, project) =>
+      dispatch(restartTask({ taskName, project })),
   };
 }
 

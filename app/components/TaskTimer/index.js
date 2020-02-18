@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -32,16 +32,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function TaskTimer({ timerStatus, deleteTask, stopTask }) {
+function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
   const classes = useStyles();
 
   const [status, setStatus] = useState(true);
   const [deleteClick, setDeleteClick] = useState(false);
   const [startTime, setStartTime] = useState('');
 
-  function startTimer() {
+  useEffect(() => {
+    if (restart && startTime === '') {
+      startTimer();
+    }
+  });
+
+  async function startTimer() {
     setStatus(false);
-    setStartTime(new Date());
+    await setStartTime(new Date());
   }
 
   function deleteTimer() {
@@ -55,9 +61,7 @@ function TaskTimer({ timerStatus, deleteTask, stopTask }) {
     reset();
   };
 
-  const stopTimer = async (reset, stop) => {
-    stop();
-    reset();
+  const stopTimer = () => {
     setStatus(true);
     if (!deleteClick) {
       stopTask(startTime, new Date());
@@ -69,7 +73,8 @@ function TaskTimer({ timerStatus, deleteTask, stopTask }) {
   return (
     <>
       <Timer
-        startImmediately={false}
+        key={restart}
+        startImmediately={restart}
         onStart={() => startTimer()}
         onStop={() => stopTimer()}
         onReset={() => deleteTimer()}
@@ -92,7 +97,10 @@ function TaskTimer({ timerStatus, deleteTask, stopTask }) {
                   <>
                     <IconButton
                       aria-label="stop"
-                      onClick={() => stopTimer(reset, stop)}
+                      onClick={() => {
+                        stop();
+                        reset();
+                      }}
                     >
                       <StopIcon color="secondary" />
                     </IconButton>
@@ -117,6 +125,7 @@ TaskTimer.propTypes = {
   timerStatus: PropTypes.bool,
   deleteTask: PropTypes.func,
   stopTask: PropTypes.func,
+  restart: PropTypes.bool,
 };
 
 export default TaskTimer;

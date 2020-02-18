@@ -37,11 +37,9 @@ export const formatTime = date => {
 };
 
 export const differenceOfTime = (startDate, endDate) => {
-  console.log(startDate, endDate);
   const diffDays = Math.abs(
     new Date(endDate).getTime() - new Date(startDate).getTime(),
   );
-  console.log(diffDays, new Date(diffDays));
 
   return msConversion(diffDays);
 };

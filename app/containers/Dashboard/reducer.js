@@ -9,6 +9,7 @@ import {
   LOAD_PROJECTS_SUCCESS,
   LOAD_PROJECTS_ERROR,
   SAVE_TASK_AFTER_SORT,
+  RESTART_TASK,
 } from './constants';
 
 export const initialState = {
@@ -16,6 +17,7 @@ export const initialState = {
   projects: [],
   error: false,
   tasks: {},
+  restartTaskData: { taskName: undefined, project: undefined },
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -36,6 +38,14 @@ const dashboardReducer = (state = initialState, action) =>
 
       case SAVE_TASK_AFTER_SORT:
         draft.tasks = action.data;
+        draft.restartTaskData = { taskName: undefined, project: undefined };
+        break;
+
+      case RESTART_TASK:
+        draft.restartTaskData = {
+          taskName: action.data.taskName,
+          project: action.data.project,
+        };
         break;
     }
   });
