@@ -191,7 +191,7 @@ export function Dashboard({
 
         <div className={classes.timeLog}>
           <DateComp date={d} tasks={tasks[d]} key={d} />
-          <TasksComponent taskList={tasks[d]} key={tasks[d]} />
+          <TasksComponent taskList={tasks[d]} key={tasks[d]} currentDate={d} />
         </div>
       ))}
     </div>
