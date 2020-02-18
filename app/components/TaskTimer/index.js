@@ -35,23 +35,36 @@ const useStyles = makeStyles(theme => ({
 function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
   const classes = useStyles();
 
-  const [status, setStatus] = useState(true);
+  // const [status, setStatus] = useState(true);
   const [deleteClick, setDeleteClick] = useState(false);
-  const [startTime, setStartTime] = useState('');
+  // const [startTime, setStartTime] = useState('');
 
+  const [time, setTime] = useState({
+    startTime: '',
+    status: true,
+    restartValue: true,
+  });
   useEffect(() => {
-    if (restart && startTime === '') {
-      startTimer();
+    if (time.restartValue && restart) {
+      // setStartTime(new Date());
+
+      // setStatus(false)
+
+      setTime({ startTime: new Date(), status: false, restartValue: false });
     }
   });
 
   async function startTimer() {
-    setStatus(false);
-    await setStartTime(new Date());
+    // setStatus(false);
+    // await setStartTime(new Date());
+    setTime({ startTime: new Date(), status: false, restartValue: true });
   }
 
   function deleteTimer() {
-    setStatus(true);
+    // setStatus(true);
+
+    setTime({ ...time, status: true, restartValue: true });
+
     deleteTask();
   }
 
@@ -62,9 +75,12 @@ function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
   };
 
   const stopTimer = () => {
-    setStatus(true);
+    // setStatus(true);
+
+    setTime({ ...time, status: true, restartValue: true });
+
     if (!deleteClick) {
-      stopTask(startTime, new Date());
+      stopTask(time.startTime, new Date());
     }
     setDeleteClick(false);
     deleteTimer();
@@ -89,7 +105,7 @@ function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
             </Box>
             <Box className={classes.timeRecorderBox}>
               <div className={classes.timeRecorderActions}>
-                {timerStatus && status ? (
+                {timerStatus && time.status ? (
                   <IconButton aria-label="play" onClick={start}>
                     <PlayArrowIcon color="primary" />
                   </IconButton>
