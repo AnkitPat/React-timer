@@ -1,3 +1,8 @@
 {
-  "app.containers.Dashboard.project.error": "Dutch: Something went wrong, please try again!"
+  "app.containers.Dashboard.project.error": "Dutch: Something went wrong, please try again!",
+  "dashboard.title": "Dashboard",
+  "dashboard.description": "Beschrijving van Dashboard",
+  "dashboard.taskPlaceholder": "Voer je taak in",
+  "dashboard.projectPlaceholder": "Project",
+  "dashboard.totalTimePlaceholder": "Totaal:"
 }

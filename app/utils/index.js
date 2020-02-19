@@ -65,3 +65,8 @@ export function msConversion(millis) {
 export function formatNumber(number) {
   return `0${number}`.slice(-2);
 }
+
+export const translateLanguage = (intl, languageKey) =>
+  intl.formatMessage({
+    id: languageKey,
+  });

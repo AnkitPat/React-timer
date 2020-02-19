@@ -17,6 +17,7 @@ import { createStructuredSelector } from 'reselect';
 import { IconButton } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { injectIntl } from 'react-intl';
 import {
   loadProjects,
   restartTask,
@@ -27,7 +28,7 @@ import {
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
-import { formatTime, msConversion } from '../../utils';
+import { formatTime, msConversion, translateLanguage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   timeRecorder: {
@@ -102,6 +103,7 @@ function ExpansionComp({
   currentDate,
   modifyTaskNameCall,
   modifyTaskProjectNameCall,
+  intl,
 }) {
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
@@ -146,7 +148,7 @@ function ExpansionComp({
             onClick={event => event.stopPropagation()}
             onFocus={event => event.stopPropagation()}
             id="standard-basic"
-            label="enter your task"
+            label={translateLanguage(intl, 'dashboard.taskPlaceholder')}
             value={taskName}
             onChange={e => setTaskName(e.target.value)}
             fullWidth
@@ -226,6 +228,7 @@ ExpansionComp.propTypes = {
   currentDate: PropTypes.string,
   modifyTaskNameCall: PropTypes.func,
   modifyTaskProjectNameCall: PropTypes.func,
+  intl: PropTypes.any,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -285,4 +288,5 @@ const withConnect = connect(
 export default compose(
   withConnect,
   memo,
+  injectIntl,
 )(ExpansionComp);

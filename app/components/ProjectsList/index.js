@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import { injectIntl } from 'react-intl';
 import LoadingIndicator from '../LoadingIndicator';
+import { translateLanguage } from '../../utils';
 
 const useStyles = makeStyles(() => ({
   selectProject: {
@@ -11,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ProjectsList({ loading, projects, handleChange, project }) {
+function ProjectsList({ loading, projects, handleChange, project, intl }) {
   const classes = useStyles();
   if (loading) {
     return <LoadingIndicator />;
@@ -20,7 +22,7 @@ function ProjectsList({ loading, projects, handleChange, project }) {
     return (
       <TextField
         id="demo-simple-select"
-        label="Project"
+        label={translateLanguage(intl, 'dashboard.projectPlaceholder')}
         select
         onChange={handleChange}
         value={project}
@@ -43,6 +45,7 @@ ProjectsList.propTypes = {
   projects: PropTypes.array,
   project: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   handleChange: PropTypes.func,
+  intl: PropTypes.any,
 };
 
-export default ProjectsList;
+export default injectIntl(ProjectsList);

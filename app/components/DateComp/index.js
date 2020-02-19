@@ -7,7 +7,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { msConversion } from '../../utils';
+import { injectIntl } from 'react-intl';
+import { msConversion, translateLanguage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   timeSpinner: {
@@ -45,7 +46,7 @@ function DateComp(props) {
     <div className={classes.timeLogTop}>
       <div className={classes.timeLogDate}>{props.date}</div>
       <div className={classes.timeLogTotal}>
-        Total:
+        {translateLanguage(props.intl, 'dashboard.totalTimePlaceholder')}
         <div className={classes.timeSpinner}>
           <div className={classes.timeSpinnerBox}>
             {msConversion(totalDuration)}
@@ -61,6 +62,7 @@ function DateComp(props) {
 DateComp.propTypes = {
   tasks: PropTypes.array,
   date: PropTypes.string,
+  intl: PropTypes.any,
 };
 
-export default DateComp;
+export default injectIntl(DateComp);

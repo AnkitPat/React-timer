@@ -17,6 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
+import { injectIntl } from 'react-intl';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import {
@@ -27,7 +28,7 @@ import {
   modifyTaskProjectName,
 } from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
-import { formatTime, msConversion } from '../../utils';
+import { formatTime, msConversion, translateLanguage } from '../../utils';
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
@@ -125,6 +126,7 @@ function Task({
   modifyTaskNameCall,
   isPartOfGroup,
   modifyTaskProjectNameCall,
+  intl,
 }) {
   useInjectSaga({ key: 'dashboard', saga });
   const [project, setProject] = React.useState(task.projectName);
@@ -164,7 +166,7 @@ function Task({
         <TextField
           inputRef={inputRef}
           id="standard-basic"
-          label="Enter your task"
+          label={translateLanguage(intl, 'dashboard.taskPlaceholder')}
           value={taskName}
           onChange={e => setTaskName(e.target.value)}
           fullWidth
@@ -244,6 +246,7 @@ Task.propTypes = {
   modifyTaskNameCall: PropTypes.func,
   isPartOfGroup: PropTypes.bool,
   modifyTaskProjectNameCall: PropTypes.func,
+  intl: PropTypes.any,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -303,4 +306,5 @@ const withConnect = connect(
 export default compose(
   withConnect,
   memo,
+  injectIntl,
 )(Task);

@@ -18,6 +18,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import { isEmpty, has } from 'lodash';
+import { injectIntl } from 'react-intl';
 import {
   makeSelectLoading,
   makeSelectProjects,
@@ -31,6 +32,7 @@ import { loadProjects, sortTask, restartTask } from './actions';
 import ProjectsList from '../../components/ProjectsList';
 import DateComp from '../../components/DateComp';
 import TasksComponent from '../../components/TasksComponent';
+import { translateLanguage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   timeRecorder: {
@@ -86,6 +88,7 @@ export function Dashboard({
   loading,
   restartTaskData,
   restartTaskCall,
+  intl,
 }) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
@@ -154,8 +157,11 @@ export function Dashboard({
   return (
     <div>
       <Helmet>
-        <title>Dashboard</title>
-        <meta name="description" content="Description of Dashboard" />
+        <title>{translateLanguage(intl, 'dashboard.title')}</title>
+        <meta
+          name="description"
+          content={translateLanguage(intl, 'dashboard.description')}
+        />
       </Helmet>
       <Paper className={classes.timeRecorder} elevation={1} square>
         <Box
@@ -166,7 +172,7 @@ export function Dashboard({
             <TextField
               inputRef={inputRef}
               id="standard-basic"
-              label="Enter your task"
+              label={translateLanguage(intl, 'dashboard.taskPlaceholder')}
               onChange={onChangeTaskName}
               value={taskName}
               fullWidth
@@ -206,6 +212,7 @@ Dashboard.propTypes = {
   tasks: PropTypes.array,
   restartTaskCall: PropTypes.func,
   restartTaskData: PropTypes.any,
+  intl: PropTypes.any,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -234,4 +241,5 @@ const withConnect = connect(
 export default compose(
   withConnect,
   memo,
+  injectIntl,
 )(Dashboard);
