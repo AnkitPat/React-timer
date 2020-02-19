@@ -15,23 +15,25 @@ import PropTypes from 'prop-types';
 import Timer from 'react-compound-timer';
 
 const useStyles = makeStyles(theme => ({
-  timeSpinner: {
-    display: 'flex',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
-  timeSpinnerBox: {
-    padding: theme.spacing(1),
-  },
-  timeStartEnd: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  timeStartEndBox: {
-    padding: theme.spacing(1),
-  },
   timeRecorderBox: {
     padding: theme.spacing(1),
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(2),
+    },
+  },
+  btnOverlay: {
+    backgroundColor: 'rgba(0,0,0,.06)',
+  },
+  timeSpinner: {
+    [theme.breakpoints.up('lg')]: {
+      fontSize: '24px',
+      color: theme.palette.primary.dark,
+    },
+  },
+  btnDelete: {
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: theme.spacing(2),
+    },
   },
 }));
 
@@ -101,7 +103,7 @@ function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
       >
         {({ start, stop, reset }) => (
           <React.Fragment>
-            <Box className={classes.timeRecorderBox}>
+            <Box className={[classes.timeRecorderBox, classes.timeSpinner]}>
               <Timer.Hours />:
               <Timer.Minutes />:
               <Timer.Seconds />
@@ -109,25 +111,31 @@ function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
             <Box className={classes.timeRecorderBox}>
               <div className={classes.timeRecorderActions}>
                 {timerStatus && time.status ? (
-                  <IconButton aria-label="play" onClick={start}>
-                    <PlayArrowIcon color="primary" />
+                  <IconButton
+                    className={classes.btnOverlay}
+                    aria-label="play"
+                    onClick={start}
+                  >
+                    <PlayArrowIcon fontSize="large" color="secondary" />
                   </IconButton>
                 ) : (
                   <>
                     <IconButton
+                      className={classes.btnOverlay}
                       aria-label="stop"
                       onClick={() => {
                         stop();
                         reset();
                       }}
                     >
-                      <StopIcon color="secondary" />
+                      <StopIcon fontSize="large" color="error" />
                     </IconButton>
                     <IconButton
+                      className={classes.btnDelete}
                       aria-label="delete"
                       onClick={async () => resetTimer(reset, stop)}
                     >
-                      <DeleteIcon color="primary" />
+                      <DeleteIcon fontSize="small" />
                     </IconButton>
                   </>
                 )}

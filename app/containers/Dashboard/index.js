@@ -42,10 +42,16 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       flexWrap: 'nowrap',
     },
+    [theme.breakpoints.up('lg')]: {
+      padding: `0 ${theme.spacing(2)}px`,
+    },
   },
   timeRecorderBox: {
     padding: theme.spacing(1),
     whiteSpace: 'nowrap',
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(2),
+    },
   },
   taskNameBox: {
     width: 'calc(100% - 120px)',

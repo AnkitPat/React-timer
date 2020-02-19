@@ -18,8 +18,12 @@ import GlobalStyle from '../../global-styles';
 
 const primaryTheme = createMuiTheme({
   palette: {
-    primary: indigo,
-    secondary: lightBlue,
+    primary: {
+      main: '#4fc3f7',
+    },
+    secondary: {
+      main: '#0277bd',
+    },
   },
 });
 export default function App() {
