@@ -22,6 +22,7 @@ import {
   restartTask,
   deleteGroupTask,
   modifyTaskName,
+  modifyTaskProjectName,
 } from '../../containers/Dashboard/actions';
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
@@ -100,6 +101,7 @@ function ExpansionComp({
   deleteGroupTaskCall,
   currentDate,
   modifyTaskNameCall,
+  modifyTaskProjectNameCall,
 }) {
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
@@ -111,6 +113,13 @@ function ExpansionComp({
   }, []);
   const handleChange = event => {
     setProject(event.target.value);
+    modifyTaskProjectNameCall(
+      project,
+      event.target.value,
+      currentDate,
+      false,
+      task.startTime,
+    );
   };
   const inputRef = React.useRef();
 
@@ -216,6 +225,7 @@ ExpansionComp.propTypes = {
   deleteGroupTaskCall: PropTypes.func,
   currentDate: PropTypes.string,
   modifyTaskNameCall: PropTypes.func,
+  modifyTaskProjectNameCall: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -242,6 +252,23 @@ function mapDispatchToProps(dispatch) {
         modifyTaskName({
           taskName,
           newTaskName,
+          currentDate,
+          isPartOfGroup,
+          startTime,
+        }),
+      ),
+
+    modifyTaskProjectNameCall: (
+      projectName,
+      newProjectName,
+      currentDate,
+      isPartOfGroup,
+      startTime,
+    ) =>
+      dispatch(
+        modifyTaskProjectName({
+          projectName,
+          newProjectName,
           currentDate,
           isPartOfGroup,
           startTime,

@@ -63,7 +63,7 @@ function sortTasks(tasks, task) {
   tasks = tasks.map(internalTask => {
     if (
       task.taskName === internalTask.taskName &&
-      task.project === internalTask.project &&
+      task.projectName === internalTask.projectName &&
       formatDate(task.startTime) === formatDate(internalTask.startTime)
     ) {
       if (task.timer && task.timer.length > 1) {
@@ -196,11 +196,13 @@ export function* modifyTaskName(action) {
       let newTask = {};
       tasks = tasks.map(internalTask => {
         if (taskName === internalTask.taskName) {
+          // Logic to get out time entry from timer array
           internalTask.timer = internalTask.timer.filter(time => {
             if (time.startTime === startTime) {
+              // created a new task for single timer entry that matched
               newTask = {
                 taskName: newTaskName,
-                project: internalTask.project,
+                projectName: internalTask.projectName,
                 startTime: time.startTime,
                 endTime: time.endTime,
                 duration: Math.abs(
@@ -216,6 +218,8 @@ export function* modifyTaskName(action) {
                   },
                 ],
               };
+
+              // decreament total duration of internal subtask times
               internalTask.duration -= time.duration;
               return false;
             }
@@ -267,12 +271,14 @@ export function* modifyTaskProjectName(action) {
     if (isPartOfGroup) {
       let newTask = {};
       tasks = tasks.map(internalTask => {
-        if (projectName === internalTask.project) {
+        if (projectName === internalTask.projectName) {
+          // Logic to get out time entry from timer array
           internalTask.timer = internalTask.timer.filter(time => {
             if (time.startTime === startTime) {
+              // created a new task for single timer entry that matched
               newTask = {
                 taskName: internalTask.taskName,
-                project: newProjectName,
+                projectName: newProjectName,
                 startTime: time.startTime,
                 endTime: time.endTime,
                 duration: Math.abs(
@@ -288,6 +294,7 @@ export function* modifyTaskProjectName(action) {
                   },
                 ],
               };
+              // decreament total duration of internal subtask times
               internalTask.duration -= time.duration;
               return false;
             }
@@ -300,8 +307,8 @@ export function* modifyTaskProjectName(action) {
     } else {
       let taskToEdit = {};
       tasks = tasks.filter(internalTask => {
-        if (projectName === internalTask.project) {
-          internalTask.project = newProjectName;
+        if (projectName === internalTask.projectName) {
+          internalTask.projectName = newProjectName;
           taskToEdit = internalTask;
           return false;
         }

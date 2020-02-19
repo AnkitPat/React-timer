@@ -98,6 +98,7 @@ function TasksComponent(props) {
           <ExpansionPanelDetails className={classes.panelDetails}>
             {task.timer.map(timer => (
               <Task
+                key={task.taskName + task.projectName + timer.startTime}
                 currentDate={props.currentDate}
                 isPartOfGroup
                 task={{

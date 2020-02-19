@@ -24,6 +24,7 @@ import {
   restartTask,
   deleteSingleTask,
   modifyTaskName,
+  modifyTaskProjectName,
 } from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
 import { formatTime, msConversion } from '../../utils';
@@ -123,6 +124,7 @@ function Task({
   currentDate,
   modifyTaskNameCall,
   isPartOfGroup,
+  modifyTaskProjectNameCall,
 }) {
   useInjectSaga({ key: 'dashboard', saga });
   const [project, setProject] = React.useState(task.projectName);
@@ -134,6 +136,13 @@ function Task({
   }, []);
   const handleChange = event => {
     setProject(event.target.value);
+    modifyTaskProjectNameCall(
+      project,
+      event.target.value,
+      currentDate,
+      isPartOfGroup,
+      task.startTime,
+    );
   };
 
   const projectListProps = {
@@ -234,6 +243,7 @@ Task.propTypes = {
   currentDate: PropTypes.string,
   modifyTaskNameCall: PropTypes.func,
   isPartOfGroup: PropTypes.bool,
+  modifyTaskProjectNameCall: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -260,6 +270,23 @@ function mapDispatchToProps(dispatch) {
         modifyTaskName({
           taskName,
           newTaskName,
+          currentDate,
+          isPartOfGroup,
+          startTime,
+        }),
+      ),
+
+    modifyTaskProjectNameCall: (
+      projectName,
+      newProjectName,
+      currentDate,
+      isPartOfGroup,
+      startTime,
+    ) =>
+      dispatch(
+        modifyTaskProjectName({
+          projectName,
+          newProjectName,
           currentDate,
           isPartOfGroup,
           startTime,
