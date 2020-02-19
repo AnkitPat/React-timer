@@ -224,7 +224,12 @@ function Task({
           <IconButton
             aria-label="delete"
             onClick={() => {
-              deleteSingleTaskCall(task.taskName, task.startTime, currentDate);
+              deleteSingleTaskCall(
+                task.taskName,
+                project,
+                task.startTime,
+                currentDate,
+              );
             }}
           >
             <DeleteIcon color="" />
@@ -259,8 +264,10 @@ function mapDispatchToProps(dispatch) {
     restartTaskCall: (taskName, project) =>
       dispatch(restartTask({ taskName, project })),
 
-    deleteSingleTaskCall: (taskName, startTime, currentDate) =>
-      dispatch(deleteSingleTask({ taskName, currentDate, startTime })),
+    deleteSingleTaskCall: (taskName, projectName, startTime, currentDate) =>
+      dispatch(
+        deleteSingleTask({ taskName, projectName, currentDate, startTime }),
+      ),
 
     modifyTaskNameCall: (
       taskName,

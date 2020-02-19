@@ -192,14 +192,20 @@ export function Dashboard({
         <TaskTimer {...timerProps} restart={startTimerClock} />
       </Paper>
 
-      {Object.keys(tasks).map(d => (
-        // let cDate = getDate(d);
+      {Object.keys(tasks)
+        .reverse()
+        .map(d => (
+          // let cDate = getDate(d);
 
-        <div className={classes.timeLog}>
-          <DateComp date={d} tasks={tasks[d]} key={d} />
-          <TasksComponent taskList={tasks[d]} key={tasks[d]} currentDate={d} />
-        </div>
-      ))}
+          <div className={classes.timeLog}>
+            <DateComp date={d} tasks={tasks[d]} key={d} />
+            <TasksComponent
+              taskList={tasks[d]}
+              key={tasks[d]}
+              currentDate={d}
+            />
+          </div>
+        ))}
     </div>
   );
 }

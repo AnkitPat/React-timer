@@ -83,6 +83,12 @@ function sortTasks(tasks, task) {
 
       taskExist = true;
     }
+    internalTask.timer.sort(function(a, b) {
+      return a.startTime - b.startTime;
+    });
+    internalTask.startTime = internalTask.timer[0].startTime;
+    internalTask.endTime =
+      internalTask.timer[internalTask.timer.length - 1].endTime;
     return internalTask;
   });
 
@@ -125,12 +131,15 @@ export function* deleteSingleTask(action) {
     const allTasks = yield select(selectors.tasksSelector);
     let tasks = allTasks[action.data.currentDate] || [];
     const { taskName } = action.data;
-    const { startTime } = action.data;
+    const { startTime, projectName } = action.data;
 
     let singleTaskName = '';
     console.log(taskName, startTime);
     tasks = tasks.map(internalTask => {
-      if (taskName === internalTask.taskName) {
+      if (
+        taskName === internalTask.taskName &&
+        projectName === internalTask.projectName
+      ) {
         if (internalTask.timer.length === 1) singleTaskName = taskName;
         internalTask.timer = internalTask.timer.filter(time => {
           if (time.startTime !== startTime) {
@@ -144,7 +153,11 @@ export function* deleteSingleTask(action) {
     });
 
     if (singleTaskName !== '') {
-      tasks = tasks.filter(internalTask => taskName !== internalTask.taskName);
+      tasks = tasks.filter(
+        internalTask =>
+          taskName !== internalTask.taskName ||
+          projectName !== internalTask.projectName,
+      );
     }
 
     yield put(
@@ -166,13 +179,16 @@ export function* deleteGroupTask(action) {
   try {
     const allTasks = yield select(selectors.tasksSelector);
     let tasks = allTasks[action.data.date] || [];
-    const { taskName } = action.data;
+    const { taskName, projectName } = action.data;
 
     tasks = tasks.filter(internalTask => {
-      if (taskName !== internalTask.taskName) {
-        return true;
+      if (
+        taskName === internalTask.taskName &&
+        projectName === internalTask.projectName
+      ) {
+        return false;
       }
-      return false;
+      return true;
     });
 
     yield put(saveTaskAfterSort({ ...allTasks, [action.data.date]: tasks }));
@@ -234,7 +250,10 @@ export function* modifyTaskName(action) {
     } else {
       let taskToEdit = {};
       tasks = tasks.filter(internalTask => {
-        if (taskName === internalTask.taskName) {
+        if (
+          taskName === internalTask.taskName &&
+          startTime === internalTask.startTime
+        ) {
           internalTask.taskName = newTaskName;
           taskToEdit = internalTask;
           return false;
@@ -309,7 +328,11 @@ export function* modifyTaskProjectName(action) {
     } else {
       let taskToEdit = {};
       tasks = tasks.filter(internalTask => {
-        if (projectName === internalTask.projectName) {
+        // check the project name and start time as well
+        if (
+          projectName === internalTask.projectName &&
+          startTime === internalTask.startTime
+        ) {
           internalTask.projectName = newProjectName;
           taskToEdit = internalTask;
           return false;
