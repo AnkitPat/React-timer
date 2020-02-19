@@ -68,17 +68,19 @@ function sortTasks(tasks, task) {
     ) {
       if (task.timer && task.timer.length > 1) {
         internalTask.timer = internalTask.timer.concat(task.timer);
+        internalTask.duration += task.duration;
       } else {
         internalTask.timer = internalTask.timer.concat({
           startTime: task.startTime,
           endTime: task.endTime,
           duration: Math.abs(new Date(task.startTime) - new Date(task.endTime)),
         });
+        internalTask.duration += Math.abs(
+          new Date(task.startTime) - new Date(task.endTime),
+        );
       }
       internalTask.endTime = task.endTime;
-      internalTask.duration += Math.abs(
-        new Date(task.startTime) - new Date(task.endTime),
-      );
+
       taskExist = true;
     }
     return internalTask;
