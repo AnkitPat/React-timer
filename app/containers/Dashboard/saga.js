@@ -1,5 +1,6 @@
 import { put, takeLatest } from '@redux-saga/core/effects';
 import { select } from 'redux-saga/effects';
+import { uuid } from 'uuidv4';
 import {
   projectsLoaded,
   projectLoadingError,
@@ -19,7 +20,6 @@ import {
   formatDate,
   timeDifference,
   addTimes,
-  msConversion,
   substractTimes,
 } from '../../utils';
 
@@ -131,7 +131,7 @@ function sortTasks(tasks, task) {
         // internalTask.duration += task.duration;  ***
         internalTask.duration = addTimes([
           internalTask.duration,
-          msConversion(task.duration),
+          task.duration,
         ]);
       } else {
         // if it has single sub-task or no sub-task, then concat single sub-task to existing
@@ -154,11 +154,11 @@ function sortTasks(tasks, task) {
 
     // Sort the sub-tasks according to its start-time
     internalTask.timer.sort(function(a, b) {
-      return a.startTime - b.startTime;
+      return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
     });
-    internalTask.startTime = internalTask.timer[0].startTime;
-    internalTask.endTime =
-      internalTask.timer[internalTask.timer.length - 1].endTime;
+    internalTask.endTime = internalTask.timer[0].endTime;
+    internalTask.startTime =
+      internalTask.timer[internalTask.timer.length - 1].startTime;
     return internalTask;
   });
 
@@ -171,6 +171,7 @@ function sortTasks(tasks, task) {
     } else {
       task = {
         ...task,
+        id: uuid(),
         duration: timeDifference(task.startTime, task.endTime),
         timer: [
           {
@@ -186,6 +187,9 @@ function sortTasks(tasks, task) {
     tasks = tasks.concat(task);
   }
 
+  tasks.sort(function(a, b) {
+    return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
+  });
   return tasks;
 }
 
@@ -294,17 +298,18 @@ export function* modifyTaskName(action) {
   try {
     const allTasks = yield select(selectors.tasksSelector);
     let tasks = allTasks[action.data.currentDate] || [];
-    const { taskName, newTaskName, isPartOfGroup, startTime } = action.data;
+    const { taskId, newTaskName, isPartOfGroup, startTime } = action.data;
 
     if (isPartOfGroup) {
       let newTask = {};
       tasks = tasks.map(internalTask => {
-        if (taskName === internalTask.taskName) {
+        if (taskId === internalTask.id) {
           // Logic to get out time entry from timer array
           internalTask.timer = internalTask.timer.filter(time => {
             if (time.startTime === startTime) {
               // created a new task for single timer entry that matched, to remove it from its group(parent task)
               newTask = {
+                id: uuid(),
                 taskName: newTaskName,
                 projectName: internalTask.projectName,
                 startTime: time.startTime,
@@ -336,10 +341,7 @@ export function* modifyTaskName(action) {
       // if it is not a part of group/parent task, then its single task. So directly removed from list of existing task by task name and start time
       let taskToEdit = {};
       tasks = tasks.filter(internalTask => {
-        if (
-          taskName === internalTask.taskName &&
-          startTime === internalTask.startTime
-        ) {
+        if (taskId === internalTask.id) {
           internalTask.taskName = newTaskName;
           taskToEdit = internalTask;
           return false;
@@ -371,23 +373,19 @@ export function* modifyTaskProjectName(action) {
 
     // Get all task for date of action
     let tasks = allTasks[action.data.currentDate] || [];
-    const {
-      projectName,
-      newProjectName,
-      isPartOfGroup,
-      startTime,
-    } = action.data;
+    const { taskId, newProjectName, isPartOfGroup, startTime } = action.data;
 
     // if its part of group/parent task
     if (isPartOfGroup) {
       let newTask = {};
       tasks = tasks.map(internalTask => {
-        if (projectName === internalTask.projectName) {
+        if (taskId === internalTask.id) {
           // Logic to get out time entry from timer array
           internalTask.timer = internalTask.timer.filter(time => {
             if (time.startTime === startTime) {
               // created a new task for single timer entry that matched
               newTask = {
+                id: uuid(),
                 taskName: internalTask.taskName,
                 projectName: newProjectName,
                 startTime: time.startTime,
@@ -420,10 +418,7 @@ export function* modifyTaskProjectName(action) {
       // filter the task from existing task list
       tasks = tasks.filter(internalTask => {
         // check the project name and start time as well
-        if (
-          projectName === internalTask.projectName &&
-          startTime === internalTask.startTime
-        ) {
+        if (taskId === internalTask.id) {
           internalTask.projectName = newProjectName;
           taskToEdit = internalTask;
           return false;

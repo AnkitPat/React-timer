@@ -139,7 +139,7 @@ function Task({
   const handleChange = event => {
     setProject(event.target.value);
     modifyTaskProjectNameCall(
-      project,
+      task.id,
       event.target.value,
       currentDate,
       isPartOfGroup,
@@ -174,7 +174,7 @@ function Task({
             if (event.target.value !== task.taskName) {
               console.log(event.target.value);
               modifyTaskNameCall(
-                task.taskName,
+                task.id,
                 event.target.value,
                 currentDate,
                 isPartOfGroup,
@@ -268,7 +268,7 @@ function mapDispatchToProps(dispatch) {
       ),
 
     modifyTaskNameCall: (
-      taskName,
+      taskId,
       newTaskName,
       currentDate,
       isPartOfGroup,
@@ -276,7 +276,7 @@ function mapDispatchToProps(dispatch) {
     ) =>
       dispatch(
         modifyTaskName({
-          taskName,
+          taskId,
           newTaskName,
           currentDate,
           isPartOfGroup,
@@ -285,7 +285,7 @@ function mapDispatchToProps(dispatch) {
       ),
 
     modifyTaskProjectNameCall: (
-      projectName,
+      taskId,
       newProjectName,
       currentDate,
       isPartOfGroup,
@@ -293,7 +293,7 @@ function mapDispatchToProps(dispatch) {
     ) =>
       dispatch(
         modifyTaskProjectName({
-          projectName,
+          taskId,
           newProjectName,
           currentDate,
           isPartOfGroup,
