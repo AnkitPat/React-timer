@@ -28,7 +28,7 @@ import {
 import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
-import { formatTime, msConversion, translateLanguage } from '../../utils';
+import { formatTime, translateLanguage } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   timeRecorder: {
@@ -187,9 +187,7 @@ function ExpansionComp({
         </Box>
         <Box className={classes.timeRecorderBox}>
           <div className={classes.timeSpinner}>
-            <div className={classes.timeSpinnerBox}>
-              {msConversion(task.duration)}
-            </div>
+            <div className={classes.timeSpinnerBox}>{task.duration}</div>
           </div>
         </Box>
         <Box className={classes.timeRecorderBox}>

@@ -28,7 +28,7 @@ import {
   modifyTaskProjectName,
 } from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
-import { formatTime, msConversion, translateLanguage } from '../../utils';
+import { formatTime, translateLanguage } from '../../utils';
 // import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
@@ -205,9 +205,7 @@ function Task({
       </Box>
       <Box className={classes.timeRecorderBox}>
         <div className={classes.timeSpinner}>
-          <div className={classes.timeSpinnerBox}>
-            {msConversion(task.duration)}
-          </div>
+          <div className={classes.timeSpinnerBox}>{task.duration}</div>
         </div>
       </Box>
       <Box className={classes.timeRecorderBox}>
