@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -39,8 +40,15 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+    background: 'transparent',
     [theme.breakpoints.up('md')]: {
       flexWrap: 'nowrap',
+    },
+    '&:not(:first-child)': {
+      borderTop: '1px solid #eaeaea',
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: `0 ${theme.spacing(1)}px`,
     },
   },
   timeRecorderBox: {
@@ -75,6 +83,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+    padding: theme.spacing(0.5),
+    borderRadius: '4px',
+    fontSize: '12px',
   },
   startEndBox: {
     width: '100%',
@@ -94,9 +107,18 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     whiteSpace: 'nowrap',
+    fontSize: '12px',
+    fontWeight: '300',
+    flexWrap: 'wrap',
+    color: theme.palette.primary.dark,
     [theme.breakpoints.up('sm')]: {
       justifyContent: 'flex-end',
     },
+  },
+  timeStartEndBox: {
+    width: '100%',
+    padding: theme.spacing(0.25),
+    textAlign: 'right',
   },
   timeLogCounter: {
     cursor: 'pointer',
@@ -112,6 +134,14 @@ const useStyles = makeStyles(theme => ({
   },
   timeLogPanel: {
     position: 'relative',
+  },
+  btnOverlay: {
+    backgroundColor: 'rgba(0,0,0,.06)',
+  },
+  btnDelete: {
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: theme.spacing(2),
+    },
   },
 }));
 
@@ -195,11 +225,10 @@ function Task({
       <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
         <div className={classes.timeStartEnd}>
           <div className={classes.timeStartEndBox}>
-            {formatTime(task.startTime)}
+            <AccessTimeIcon fontSize="small" /> {formatTime(task.startTime)}
           </div>
-          <span className={classes.divider}>-</span>
           <div className={classes.timeStartEndBox}>
-            {formatTime(task.endTime)}
+            <AccessTimeIcon fontSize="small" /> {formatTime(task.endTime)}
           </div>
         </div>
       </Box>
@@ -211,15 +240,17 @@ function Task({
       <Box className={classes.timeRecorderBox}>
         <div className={classes.timeRecorderActions}>
           <IconButton
+            className={classes.btnOverlay}
             aria-label="play"
             onClick={() => {
               restartTaskCall(task.taskName, project);
             }}
           >
-            <PlayArrowIcon color="primary" />
+            <PlayArrowIcon fontSize="small" color="secondary" />
           </IconButton>
 
           <IconButton
+            className={classes.btnDelete}
             aria-label="delete"
             onClick={() => {
               deleteSingleTaskCall(
@@ -230,7 +261,7 @@ function Task({
               );
             }}
           >
-            <DeleteIcon color="" />
+            <DeleteIcon fontSize="small" />
           </IconButton>
         </div>
       </Box>

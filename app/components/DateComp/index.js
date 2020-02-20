@@ -8,13 +8,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { injectIntl } from 'react-intl';
-import { msConversion, translateLanguage, addTimes } from '../../utils';
+import { translateLanguage, addTimes } from '../../utils';
 
 const useStyles = makeStyles(theme => ({
   timeSpinner: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
+    color: theme.palette.primary.dark,
+    fontSize: '20px',
   },
   timeSpinnerBox: {
     padding: theme.spacing(1),
@@ -23,7 +25,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    fontSize: '18px',
+    fontSize: '14px',
+    color: theme.palette.primary.dark,
   },
   timeLogTotal: {
     display: 'flex',

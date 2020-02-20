@@ -18,6 +18,7 @@ import { IconButton } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { injectIntl } from 'react-intl';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import {
   loadProjects,
   restartTask,
@@ -35,27 +36,84 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    [theme.breakpoints.up('md')]: {
+      flexWrap: 'nowrap',
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: `0 ${theme.spacing(1)}px`,
+    },
   },
   timeRecorderBox: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
-  selectProject: {
-    minWidth: '120px',
+  taskNameBox: {
+    width: 'calc(100% - 120px)',
+    maxWidth: 'calc(100% - 120px)',
+    flex: '0 0 calc(100% - 120px)',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+      maxWidth: '100%',
+      flex: '1 0 auto',
+    },
+  },
+  projectBox: {
+    width: '120px',
+    maxWidth: '120px',
+    flex: '0 0 120px',
+    [theme.breakpoints.up('sm')]: {
+      width: '150px',
+      maxWidth: '150px',
+      flex: '0 0 150px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '250px',
+      maxWidth: '250px',
+      flex: '0 0 250px',
+    },
   },
   timeSpinner: {
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+    padding: theme.spacing(0.5),
+    borderRadius: '4px',
+    fontSize: '12px',
   },
-  timeSpinnerBox: {
+  startEndBox: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      order: '1',
+    },
+    [theme.breakpoints.up('md')]: {
+      order: '0',
+      width: 'auto',
+    },
+  },
+
+  divider: {
     padding: theme.spacing(1),
   },
   timeStartEnd: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    whiteSpace: 'nowrap',
+    fontSize: '12px',
+    fontWeight: '300',
+    flexWrap: 'wrap',
+    color: theme.palette.primary.dark,
+    [theme.breakpoints.up('sm')]: {
+      justifyContent: 'flex-end',
+    },
   },
   timeStartEndBox: {
-    padding: theme.spacing(1),
+    width: '100%',
+    padding: theme.spacing(0.25),
+    textAlign: 'right',
   },
   timeLogCounter: {
     cursor: 'pointer',
@@ -65,32 +123,16 @@ const useStyles = makeStyles(theme => ({
     lineHeight: '1',
     borderRadius: theme.spacing(0.5),
   },
-  timeLog: {
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(1),
-  },
-  timeLogTop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    fontSize: '18px',
-  },
-  timeLogTotal: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  timeLogPanel: {
-    position: 'relative',
-  },
-  timeLogPanelBody: {
-    display: 'none',
-  },
   panelSummary: {
     padding: 0,
   },
-  panelDetails: {
-    padding: 0,
-    flexWrap: 'wrap',
+  btnOverlay: {
+    backgroundColor: 'rgba(0,0,0,.06)',
+  },
+  btnDelete: {
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: theme.spacing(2),
+    },
   },
 }));
 
@@ -135,14 +177,17 @@ function ExpansionComp({
     <ExpansionPanelSummary
       className={classes.panelSummary}
       aria-label="Expand"
-      aria-controls="additional-actions1-content"
+      aria-controls="additional-actions-content"
       id="additional-actions1-header"
     >
       <Paper className={classes.timeRecorder} elevation={0} square>
         <Box className={classes.timeRecorderBox}>
           <div className={classes.timeLogCounter}>{task.timer.length}</div>
         </Box>
-        <Box flexGrow="1" className={classes.timeRecorderBox}>
+        <Box
+          flexGrow="1"
+          className={[classes.timeRecorderBox, classes.taskNameBox]}
+        >
           <TextField
             inputRef={inputRef}
             onClick={event => event.stopPropagation()}
@@ -171,17 +216,16 @@ function ExpansionComp({
             }}
           />
         </Box>
-        <Box className={classes.timeRecorderBox}>
+        <Box className={[classes.timeRecorderBox, classes.projectBox]}>
           <ProjectsList {...projectListProps} />
         </Box>
-        <Box className={classes.timeRecorderBox}>
+        <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
           <div className={classes.timeStartEnd}>
             <div className={classes.timeStartEndBox}>
-              {formatTime(task.startTime)}
-            </div>{' '}
-            -
+              <AccessTimeIcon fontSize="small" /> {formatTime(task.startTime)}
+            </div>
             <div className={classes.timeStartEndBox}>
-              {formatTime(task.endTime)}
+              <AccessTimeIcon fontSize="small" /> {formatTime(task.endTime)}
             </div>
           </div>
         </Box>
@@ -193,22 +237,24 @@ function ExpansionComp({
         <Box className={classes.timeRecorderBox}>
           <div className={classes.timeRecorderActions}>
             <IconButton
+              className={classes.btnOverlay}
               aria-label="play"
               onClick={() => {
                 restartTaskCall(task.taskName, project);
               }}
             >
-              <PlayArrowIcon color="primary" />
+              <PlayArrowIcon fontSize="small" color="secondary" />
             </IconButton>
 
             <IconButton
+              className={classes.btnDelete}
               aria-label="delete"
               onClick={() => {
                 console.log(currentDate);
                 deleteGroupTaskCall(task.taskName, project, currentDate);
               }}
             >
-              <DeleteIcon color="" />
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </div>
         </Box>

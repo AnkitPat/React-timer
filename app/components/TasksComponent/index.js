@@ -26,29 +26,6 @@ const useStyles = makeStyles(theme => ({
   selectProject: {
     minWidth: '120px',
   },
-  timeSpinner: {
-    display: 'flex',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
-  timeSpinnerBox: {
-    padding: theme.spacing(1),
-  },
-  timeStartEnd: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  timeStartEndBox: {
-    padding: theme.spacing(1),
-  },
-  timeLogCounter: {
-    cursor: 'pointer',
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-    color: '#ffffff',
-    lineHeight: '1',
-    borderRadius: theme.spacing(0.5),
-  },
   timeLog: {
     marginTop: theme.spacing(4),
     padding: theme.spacing(1),
@@ -57,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    fontSize: '18px',
+    fontSize: '14px',
   },
   timeLogTotal: {
     display: 'flex',
@@ -75,6 +52,7 @@ const useStyles = makeStyles(theme => ({
   panelDetails: {
     padding: 0,
     flexWrap: 'wrap',
+    backgroundColor: theme.palette.background.default,
   },
 }));
 

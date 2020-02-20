@@ -10,7 +10,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { lightBlue, indigo } from '@material-ui/core/colors';
 import Dashboard from 'containers/Dashboard/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
@@ -18,8 +17,12 @@ import GlobalStyle from '../../global-styles';
 
 const primaryTheme = createMuiTheme({
   palette: {
-    primary: indigo,
-    secondary: lightBlue,
+    primary: {
+      main: '#4fc3f7',
+    },
+    secondary: {
+      main: '#0277bd',
+    },
   },
 });
 export default function App() {
