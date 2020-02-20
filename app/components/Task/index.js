@@ -50,12 +50,6 @@ function Task({
   const inputRef = React.useRef();
   const [project, setProject] = React.useState(task.projectName);
   const [taskName, setTaskName] = React.useState(task.taskName);
-  const projectListProps = {
-    loading,
-    projects,
-    project,
-    handleChange,
-  };
 
   useEffect(() => {
     getProjects();
@@ -70,6 +64,13 @@ function Task({
       isPartOfGroup,
       task.startTime,
     );
+  };
+
+  const projectListProps = {
+    loading,
+    projects,
+    project,
+    handleChange,
   };
 
   return (

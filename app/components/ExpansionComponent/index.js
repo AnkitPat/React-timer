@@ -46,12 +46,6 @@ function ExpansionComp({
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
   const [taskName, setTaskName] = React.useState(task.taskName);
-  const projectListProps = {
-    loading,
-    projects,
-    project,
-    handleChange,
-  };
 
   useEffect(() => {
     getProjects();
@@ -66,6 +60,12 @@ function ExpansionComp({
       false,
       task.startTime,
     );
+  };
+  const projectListProps = {
+    loading,
+    projects,
+    project,
+    handleChange,
   };
 
   return (
@@ -134,7 +134,8 @@ function ExpansionComp({
             <IconButton
               className={classes.btnOverlay}
               aria-label="play"
-              onClick={() => {
+              onClick={event => {
+                event.stopPropagation();
                 restartTaskCall(task.taskName, project);
               }}
             >
