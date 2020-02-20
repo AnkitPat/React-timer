@@ -251,7 +251,7 @@ function ExpansionComp({
               aria-label="delete"
               onClick={() => {
                 console.log(currentDate);
-                deleteGroupTaskCall(task.taskName, project, currentDate);
+                deleteGroupTaskCall(task.id, currentDate);
               }}
             >
               <DeleteIcon fontSize="small" />
@@ -286,8 +286,8 @@ function mapDispatchToProps(dispatch) {
     restartTaskCall: (taskName, project) =>
       dispatch(restartTask({ taskName, project })),
 
-    deleteGroupTaskCall: (taskName, projectName, date) =>
-      dispatch(deleteGroupTask({ taskName, projectName, date })),
+    deleteGroupTaskCall: (taskId, date) =>
+      dispatch(deleteGroupTask({ taskId, date })),
     modifyTaskNameCall: (
       taskId,
       newTaskName,

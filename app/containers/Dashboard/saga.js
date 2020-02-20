@@ -207,18 +207,15 @@ export function* deleteSingleTask(action) {
 
     // Get all tasks for date of action
     let tasks = allTasks[action.data.currentDate] || [];
-    const { taskName } = action.data;
-    const { startTime, projectName } = action.data;
+    const { taskId, taskName } = action.data;
+    const { startTime } = action.data;
 
     let singleTaskName = '';
 
     // Map(loop) over all tasks on date of action
     tasks = tasks.map(internalTask => {
       // For single task, check taskName & projectName should be match
-      if (
-        taskName === internalTask.taskName &&
-        projectName === internalTask.projectName
-      ) {
+      if (taskId === internalTask.id) {
         // Check if matched task has single task & no sub-task, save task name for next step
         if (internalTask.timer.length === 1) singleTaskName = taskName;
 
@@ -239,11 +236,7 @@ export function* deleteSingleTask(action) {
 
     // if there is no sub-task attached, filter the task from existing tasks list
     if (singleTaskName !== '') {
-      tasks = tasks.filter(
-        internalTask =>
-          taskName !== internalTask.taskName ||
-          projectName !== internalTask.projectName,
-      );
+      tasks = tasks.filter(internalTask => taskId !== internalTask.id);
     }
 
     yield put(
@@ -268,14 +261,11 @@ export function* deleteGroupTask(action) {
 
     // Get all task for date of action
     let tasks = allTasks[action.data.date] || [];
-    const { taskName, projectName } = action.data;
+    const { taskId } = action.data;
 
     // if deletion is on Group task, just single filter it out
     tasks = tasks.filter(internalTask => {
-      if (
-        taskName === internalTask.taskName &&
-        projectName === internalTask.projectName
-      ) {
+      if (taskId === internalTask.id) {
         return false;
       }
       return true;

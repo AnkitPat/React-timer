@@ -254,8 +254,8 @@ function Task({
             aria-label="delete"
             onClick={() => {
               deleteSingleTaskCall(
-                task.taskName,
-                project,
+                task.id,
+                taskName,
                 task.startTime,
                 currentDate,
               );
@@ -293,10 +293,8 @@ function mapDispatchToProps(dispatch) {
     restartTaskCall: (taskName, project) =>
       dispatch(restartTask({ taskName, project })),
 
-    deleteSingleTaskCall: (taskName, projectName, startTime, currentDate) =>
-      dispatch(
-        deleteSingleTask({ taskName, projectName, currentDate, startTime }),
-      ),
+    deleteSingleTaskCall: (taskId, taskName, startTime, currentDate) =>
+      dispatch(deleteSingleTask({ taskId, taskName, currentDate, startTime })),
 
     modifyTaskNameCall: (
       taskId,
