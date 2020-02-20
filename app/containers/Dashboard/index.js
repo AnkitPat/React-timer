@@ -49,6 +49,7 @@ export const Dashboard = ({
   const [taskName, setTaskName] = React.useState('');
   const [timerStatus, setTimerStatus] = React.useState(true);
   const [startTimerClock, setStartTimerClock] = React.useState(false);
+  const [restartTime, setRestartTime] = React.useState('');
 
   useEffect(() => {
     getProjects();
@@ -61,6 +62,7 @@ export const Dashboard = ({
       setTaskName(restartTaskData.taskName);
       setProject(restartTaskData.project);
       setStartTimerClock(true);
+      setRestartTime(new Date());
       restartTaskCall('', '');
     }
   });
@@ -71,7 +73,8 @@ export const Dashboard = ({
 
   const startTimer = event => {
     if (event !== undefined && event.preventDefault) event.preventDefault();
-    setTimerStatus(false);
+    setStartTimerClock(true);
+    setTimerStatus(true);
   };
 
   const onChangeTaskName = event => {
@@ -91,6 +94,11 @@ export const Dashboard = ({
     saveTask(taskName, project, start, end);
   };
 
+  const timerStarted = () => {
+    setStartTimerClock(true);
+    setTimerStatus(true);
+  };
+
   const projectListProps = {
     loading,
     projects,
@@ -99,6 +107,7 @@ export const Dashboard = ({
   };
 
   const timerProps = {
+    timerStarted,
     timerStatus,
     deleteTask,
     stopTask,
@@ -140,7 +149,11 @@ export const Dashboard = ({
         <Box className={[classes.timeRecorderBox, classes.projectBox]}>
           <ProjectList {...projectListProps} />
         </Box>
-        <TaskTimer {...timerProps} restart={startTimerClock} />
+        <TaskTimer
+          {...timerProps}
+          restart={startTimerClock}
+          unique={restartTime}
+        />
       </Paper>
 
       {Object.keys(tasks)

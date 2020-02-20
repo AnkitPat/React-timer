@@ -14,22 +14,36 @@ import PropTypes from 'prop-types';
 import Timer from 'react-compound-timer';
 import { useStyles } from './index.styles';
 
-const TaskTimer = ({ timerStatus, deleteTask, stopTask, restart }) => {
+const TaskTimer = ({
+  timerStatus,
+  timerStarted,
+  deleteTask,
+  stopTask,
+  restart,
+  unique,
+}) => {
   const classes = useStyles();
   const [deleteClick, setDeleteClick] = useState(false);
   const [time, setTime] = useState({
     startTime: '',
     status: true,
     restartValue: true,
+    timeOfStart: '',
   });
 
   useEffect(() => {
     if (time.restartValue && restart) {
-      setTime({ startTime: new Date(), status: false, restartValue: false });
+      setTime({
+        startTime: new Date(),
+        status: false,
+        restartValue: false,
+        timeOfStart: unique,
+      });
     }
   });
 
   async function startTimer() {
+    timerStarted();
     setTime({ startTime: new Date(), status: false, restartValue: true });
   }
 
@@ -115,6 +129,8 @@ TaskTimer.propTypes = {
   deleteTask: PropTypes.func,
   stopTask: PropTypes.func,
   restart: PropTypes.bool,
+  timerStarted: PropTypes.any,
+  unique: PropTypes.string,
 };
 
 export default TaskTimer;
