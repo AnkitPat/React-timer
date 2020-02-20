@@ -25,7 +25,7 @@ import {
 import saga from './saga';
 import TaskTimer from '../../components/TaskTimer';
 import { loadProjects, sortTask, restartTask } from './actions';
-import ProjectsList from '../../components/ProjectsList';
+import ProjectList from '../../components/ProjectList';
 import DateComponent from '../../components/DateComponent';
 import TasksComponent from '../../components/TasksComponent';
 import { translateLanguage } from '../../utils';
@@ -138,7 +138,7 @@ export const Dashboard = ({
           </form>
         </Box>
         <Box className={[classes.timeRecorderBox, classes.projectBox]}>
-          <ProjectsList {...projectListProps} />
+          <ProjectList {...projectListProps} />
         </Box>
         <TaskTimer {...timerProps} restart={startTimerClock} />
       </Paper>

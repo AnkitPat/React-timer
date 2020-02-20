@@ -1,7 +1,7 @@
 /**
  * app.js
  *
- * This is the entry file for the application, only setup and boilerplate
+ * This is the entry file for the application
  * code.
  */
 
@@ -38,10 +38,7 @@ import { translationMessages } from './i18n';
 // Create redux store with history
 const initialState = {};
 const { store, persistor } = configureStore(initialState, history);
-// For testing purpose
-store.subscribe(() => {
-  console.log('store: ', store.getState());
-});
+
 const MOUNT_NODE = document.getElementById('app');
 
 const render = messages => {

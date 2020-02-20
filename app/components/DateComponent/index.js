@@ -29,7 +29,7 @@ const DateComponent = props => {
       </div>
     </div>
   ) : (
-    <div />
+    <></>
   );
 };
 

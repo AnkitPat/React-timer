@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import { injectIntl } from 'react-intl';
-import ProjectsList from '../ProjectsList';
+import ProjectList from '../ProjectList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import {
   loadProjects,
@@ -106,7 +106,7 @@ function Task({
         />
       </Box>
       <Box className={[classes.timeRecorderBox, classes.projectBox]}>
-        <ProjectsList {...projectListProps} />
+        <ProjectList {...projectListProps} />
       </Box>
       <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
         <div className={classes.timeStartEnd}>

@@ -15,9 +15,6 @@ import { IntlProvider } from 'react-intl';
 import { makeSelectLocale } from './selectors';
 
 export function LanguageProvider(props) {
-  const userLang = navigator.language;
-
-  console.log(userLang);
   return (
     <IntlProvider
       locale={props.locale}

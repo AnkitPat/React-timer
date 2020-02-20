@@ -26,7 +26,7 @@ import {
   modifyTaskName,
   modifyTaskProjectName,
 } from '../../containers/Dashboard/actions';
-import ProjectsList from '../ProjectsList';
+import ProjectList from '../ProjectList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
 import { formatTime, translateLanguage } from '../../utils';
@@ -96,7 +96,6 @@ function ExpansionComp({
             fullWidth
             onBlur={event => {
               if (event.target.value !== task.taskName) {
-                console.log(event.target.value);
                 modifyTaskNameCall(
                   task.id,
                   event.target.value,
@@ -114,7 +113,7 @@ function ExpansionComp({
           />
         </Box>
         <Box className={[classes.timeRecorderBox, classes.projectBox]}>
-          <ProjectsList {...projectListProps} />
+          <ProjectList {...projectListProps} />
         </Box>
         <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
           <div className={classes.timeStartEnd}>

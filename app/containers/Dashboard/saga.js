@@ -211,7 +211,7 @@ export function* deleteSingleTask(action) {
     const { taskId, taskName } = action.data;
     const { startTime } = action.data;
 
-    let singleTaskName = '';
+    let singleTaskName = null;
 
     // Map(loop) over all tasks on date of action
     tasks = tasks.map(internalTask => {
@@ -236,7 +236,7 @@ export function* deleteSingleTask(action) {
     });
 
     // if there is no sub-task attached, filter the task from existing tasks list
-    if (singleTaskName !== '') {
+    if (singleTaskName !== null) {
       tasks = tasks.filter(internalTask => taskId !== internalTask.id);
     }
 

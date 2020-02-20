@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ProjectsList = ({ loading, projects, handleChange, project, intl }) => {
+const ProjectList = ({ loading, projects, handleChange, project, intl }) => {
   const classes = useStyles();
   if (loading) {
     return <LoadingIndicator />;
@@ -40,7 +40,7 @@ const ProjectsList = ({ loading, projects, handleChange, project, intl }) => {
   return null;
 };
 
-ProjectsList.propTypes = {
+ProjectList.propTypes = {
   loading: PropTypes.bool,
   projects: PropTypes.array,
   project: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -48,4 +48,4 @@ ProjectsList.propTypes = {
   intl: PropTypes.any,
 };
 
-export default injectIntl(ProjectsList);
+export default injectIntl(ProjectList);
