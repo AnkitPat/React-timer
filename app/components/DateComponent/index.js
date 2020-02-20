@@ -1,43 +1,16 @@
 /**
  *
- * DateComp
+ * Date Component to show date and total time
  *
  */
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { injectIntl } from 'react-intl';
 import { translateLanguage, addTimes } from '../../utils';
+import { useStyles } from './index.styles';
 
-const useStyles = makeStyles(theme => ({
-  timeSpinner: {
-    display: 'flex',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    color: theme.palette.primary.dark,
-    fontSize: '20px',
-  },
-  timeSpinnerBox: {
-    padding: theme.spacing(1),
-  },
-  timeLogTop: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    fontSize: '14px',
-    color: theme.palette.primary.dark,
-  },
-  timeLogTotal: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  timeLogPanel: {
-    position: 'relative',
-  },
-}));
-
-function DateComp(props) {
+const DateComponent = props => {
   const classes = useStyles();
   let totalDuration = '00:00:00';
   props.tasks.map(task => {
@@ -58,12 +31,12 @@ function DateComp(props) {
   ) : (
     <div />
   );
-}
+};
 
-DateComp.propTypes = {
+DateComponent.propTypes = {
   tasks: PropTypes.array,
   date: PropTypes.string,
   intl: PropTypes.any,
 };
 
-export default injectIntl(DateComp);
+export default injectIntl(DateComponent);

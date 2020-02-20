@@ -1,6 +1,6 @@
 /**
  *
- * Task
+ * Task component to show info of single task
  *
  */
 
@@ -14,7 +14,6 @@ import TextField from '@material-ui/core/TextField';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -30,120 +29,7 @@ import {
 } from '../../containers/Dashboard/actions';
 import saga from '../../containers/Dashboard/saga';
 import { formatTime, translateLanguage } from '../../utils';
-// import PropTypes from 'prop-types';
-// import styled from 'styled-components';
-
-const useStyles = makeStyles(theme => ({
-  timeRecorder: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    background: 'transparent',
-    [theme.breakpoints.up('md')]: {
-      flexWrap: 'nowrap',
-    },
-    '&:not(:first-child)': {
-      borderTop: '1px solid #eaeaea',
-    },
-    [theme.breakpoints.up('lg')]: {
-      padding: `0 ${theme.spacing(1)}px`,
-    },
-  },
-  timeRecorderBox: {
-    padding: theme.spacing(1),
-  },
-  taskNameBox: {
-    width: 'calc(100% - 120px)',
-    maxWidth: 'calc(100% - 120px)',
-    flex: '0 0 calc(100% - 120px)',
-    [theme.breakpoints.up('sm')]: {
-      width: 'auto',
-      maxWidth: '100%',
-      flex: '1 0 auto',
-    },
-  },
-  projectBox: {
-    width: '120px',
-    maxWidth: '120px',
-    flex: '0 0 120px',
-    [theme.breakpoints.up('sm')]: {
-      width: '150px',
-      maxWidth: '150px',
-      flex: '0 0 150px',
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: '250px',
-      maxWidth: '250px',
-      flex: '0 0 250px',
-    },
-  },
-  timeSpinner: {
-    display: 'flex',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.secondary.contrastText,
-    padding: theme.spacing(0.5),
-    borderRadius: '4px',
-    fontSize: '12px',
-  },
-  startEndBox: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      order: '1',
-    },
-    [theme.breakpoints.up('md')]: {
-      order: '0',
-      width: 'auto',
-    },
-  },
-  divider: {
-    padding: theme.spacing(1),
-  },
-  timeStartEnd: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    whiteSpace: 'nowrap',
-    fontSize: '12px',
-    fontWeight: '300',
-    flexWrap: 'wrap',
-    color: theme.palette.primary.dark,
-    [theme.breakpoints.up('sm')]: {
-      justifyContent: 'flex-end',
-    },
-  },
-  timeStartEndBox: {
-    width: '100%',
-    padding: theme.spacing(0.25),
-    textAlign: 'right',
-  },
-  timeLogCounter: {
-    cursor: 'pointer',
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-    color: '#ffffff',
-    lineHeight: '1',
-    borderRadius: theme.spacing(0.5),
-  },
-  timeLog: {
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(1),
-  },
-  timeLogPanel: {
-    position: 'relative',
-  },
-  btnOverlay: {
-    backgroundColor: 'rgba(0,0,0,.06)',
-  },
-  btnDelete: {
-    [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing(2),
-    },
-  },
-}));
+import { useStyles } from './index.styles';
 
 function Task({
   task,
@@ -159,13 +45,22 @@ function Task({
   intl,
 }) {
   useInjectSaga({ key: 'dashboard', saga });
+
+  const classes = useStyles();
+  const inputRef = React.useRef();
   const [project, setProject] = React.useState(task.projectName);
   const [taskName, setTaskName] = React.useState(task.taskName);
+  const projectListProps = {
+    loading,
+    projects,
+    project,
+    handleChange,
+  };
 
   useEffect(() => {
-    // When initial state username is not null, submit the form to load repos
     getProjects();
   }, []);
+
   const handleChange = event => {
     setProject(event.target.value);
     modifyTaskProjectNameCall(
@@ -176,16 +71,6 @@ function Task({
       task.startTime,
     );
   };
-
-  const projectListProps = {
-    loading,
-    projects,
-    project,
-    handleChange,
-  };
-
-  const classes = useStyles();
-  const inputRef = React.useRef();
 
   return (
     <Paper className={classes.timeRecorder} elevation={0} square>
@@ -202,7 +87,6 @@ function Task({
           fullWidth
           onBlur={event => {
             if (event.target.value !== task.taskName) {
-              console.log(event.target.value);
               modifyTaskNameCall(
                 task.id,
                 event.target.value,
@@ -290,6 +174,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     getProjects: () => dispatch(loadProjects()),
+
     restartTaskCall: (taskName, project) =>
       dispatch(restartTask({ taskName, project })),
 

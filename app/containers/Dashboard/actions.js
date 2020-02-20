@@ -55,7 +55,7 @@ export function projectLoadingError(error) {
 }
 
 /**
- * Dispatched when task saved
+ * Action to save task after sorting done
  *
  * @param error
  * @returns {{type: string, error: *}}
@@ -81,7 +81,7 @@ export function saveTaskAfterSort(data) {
 }
 
 /**
- * Dispatched when restart task
+ * Action to restart task
  *
  * @param error
  * @returns {{type: string, error: *}}
@@ -94,7 +94,7 @@ export function restartTask(data) {
 }
 
 /**
- * Dispatched when delete single taskl
+ * Action to delete Single Task
  *
  * @param error
  * @returns {{type: string, error: *}}
@@ -107,7 +107,7 @@ export function deleteSingleTask(data) {
 }
 
 /**
- * Dispatched when delete group task
+ * Action to delete group task
  *
  * @param error
  * @returns {{type: string, error: *}}

@@ -10,66 +10,31 @@ import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Timer from 'react-compound-timer';
+import { useStyles } from './index.styles';
 
-const useStyles = makeStyles(theme => ({
-  timeRecorderBox: {
-    padding: theme.spacing(1),
-    [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing(2),
-    },
-  },
-  btnOverlay: {
-    backgroundColor: 'rgba(0,0,0,.06)',
-  },
-  timeSpinner: {
-    [theme.breakpoints.up('lg')]: {
-      fontSize: '24px',
-      color: theme.palette.primary.dark,
-    },
-  },
-  btnDelete: {
-    [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing(2),
-    },
-  },
-}));
-
-function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
+const TaskTimer = ({ timerStatus, deleteTask, stopTask, restart }) => {
   const classes = useStyles();
-
-  // const [status, setStatus] = useState(true);
   const [deleteClick, setDeleteClick] = useState(false);
-  // const [startTime, setStartTime] = useState('');
-
   const [time, setTime] = useState({
     startTime: '',
     status: true,
     restartValue: true,
   });
+
   useEffect(() => {
     if (time.restartValue && restart) {
-      // setStartTime(new Date());
-
-      // setStatus(false)
-
       setTime({ startTime: new Date(), status: false, restartValue: false });
     }
   });
 
   async function startTimer() {
-    // setStatus(false);
-    // await setStartTime(new Date());
     setTime({ startTime: new Date(), status: false, restartValue: true });
   }
 
   function deleteTimer() {
-    // setStatus(true);
-
     setTime({ ...time, status: true, restartValue: true });
-
     deleteTask();
   }
 
@@ -80,10 +45,7 @@ function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
   };
 
   const stopTimer = () => {
-    // setStatus(true);
-
     setTime({ ...time, status: true, restartValue: true });
-
     if (!deleteClick) {
       stopTask(time.startTime, new Date());
     }
@@ -146,7 +108,7 @@ function TaskTimer({ timerStatus, deleteTask, stopTask, restart }) {
       </Timer>
     </>
   );
-}
+};
 
 TaskTimer.propTypes = {
   timerStatus: PropTypes.bool,

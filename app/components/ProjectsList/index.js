@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function ProjectsList({ loading, projects, handleChange, project, intl }) {
+const ProjectsList = ({ loading, projects, handleChange, project, intl }) => {
   const classes = useStyles();
   if (loading) {
     return <LoadingIndicator />;
@@ -38,7 +38,7 @@ function ProjectsList({ loading, projects, handleChange, project, intl }) {
   }
 
   return null;
-}
+};
 
 ProjectsList.propTypes = {
   loading: PropTypes.bool,

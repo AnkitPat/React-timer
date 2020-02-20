@@ -8,10 +8,6 @@ import { initialState } from './reducer';
 const selectDashboardDomain = state => state.dashboard || initialState;
 
 /**
- * Other specific selectors
- */
-
-/**
  * Default selector used by Dashboard
  */
 

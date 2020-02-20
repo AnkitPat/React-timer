@@ -1,6 +1,6 @@
 /**
  *
- * Tests for TaskList
+ * Tests for ExpansionComp
  *
  * @see https://github.com/react-boilerplate/react-boilerplate/tree/master/docs/testing
  *
@@ -10,12 +10,12 @@ import React from 'react';
 import { render } from 'react-testing-library';
 // import 'jest-dom/extend-expect'; // add some helpful assertions
 
-import TaskList from '../index';
+import ExpansionComponent from '../index';
 
-describe('<TaskList />', () => {
+describe('<ExpansionComp />', () => {
   it('Expect to not log errors in console', () => {
     const spy = jest.spyOn(global.console, 'error');
-    render(<TaskList />);
+    render(<ExpansionComponent />);
     expect(spy).not.toHaveBeenCalled();
   });
 
@@ -31,7 +31,7 @@ describe('<TaskList />', () => {
   it.skip('Should render and match the snapshot', () => {
     const {
       container: { firstChild },
-    } = render(<TaskList />);
+    } = render(<ExpansionComponent />);
     expect(firstChild).toMatchSnapshot();
   });
 });

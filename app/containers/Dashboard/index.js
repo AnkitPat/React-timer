@@ -1,6 +1,6 @@
 /**
  *
- * Dashboard
+ * Dashboard Container
  *
  */
 
@@ -10,13 +10,11 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import { isEmpty, has } from 'lodash';
 import { injectIntl } from 'react-intl';
 import {
@@ -30,63 +28,12 @@ import saga from './saga';
 import TaskTimer from '../../components/TaskTimer';
 import { loadProjects, sortTask, restartTask } from './actions';
 import ProjectsList from '../../components/ProjectsList';
-import DateComp from '../../components/DateComp';
+import DateComponent from '../../components/DateComponent';
 import TasksComponent from '../../components/TasksComponent';
 import { translateLanguage } from '../../utils';
+import { useStyles } from './index.styles';
 
-const useStyles = makeStyles(theme => ({
-  timeRecorder: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    [theme.breakpoints.up('sm')]: {
-      flexWrap: 'nowrap',
-    },
-    [theme.breakpoints.up('lg')]: {
-      padding: `0 ${theme.spacing(2)}px`,
-    },
-  },
-  timeRecorderBox: {
-    padding: theme.spacing(1),
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing(2),
-    },
-  },
-  taskNameBox: {
-    width: 'calc(100% - 120px)',
-    maxWidth: 'calc(100% - 120px)',
-    flex: '0 0 calc(100% - 120px)',
-    [theme.breakpoints.up('sm')]: {
-      width: 'auto',
-      maxWidth: '100%',
-      flex: '1 0 auto',
-    },
-  },
-  projectBox: {
-    width: '120px',
-    maxWidth: '120px',
-    flex: '0 0 120px',
-    [theme.breakpoints.up('sm')]: {
-      width: '150px',
-      maxWidth: '150px',
-      flex: '0 0 150px',
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: '250px',
-      maxWidth: '250px',
-      flex: '0 0 250px',
-    },
-  },
-  timeLog: {
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(1),
-  },
-}));
-
-export function Dashboard({
+export const Dashboard = ({
   tasks,
   projects,
   getProjects,
@@ -95,18 +42,18 @@ export function Dashboard({
   restartTaskData,
   restartTaskCall,
   intl,
-}) {
+}) => {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
-  const classes = useStyles();
 
+  const classes = useStyles();
+  const taskInputRef = React.useRef();
   const [project, setProject] = React.useState('');
   const [taskName, setTaskName] = React.useState('');
   const [timerStatus, setTimerStatus] = React.useState(true);
   const [startTimerClock, setStartTimerClock] = React.useState(false);
 
   useEffect(() => {
-    // When initial state username is not null, submit the form to load repos
     getProjects();
 
     if (
@@ -146,7 +93,6 @@ export function Dashboard({
     setTimerStatus(false);
     saveTask(taskName, project, start, end);
   };
-  const inputRef = React.useRef();
 
   const projectListProps = {
     loading,
@@ -176,7 +122,7 @@ export function Dashboard({
         >
           <form onSubmit={startTimer}>
             <TextField
-              inputRef={inputRef}
+              inputRef={taskInputRef}
               id="standard-basic"
               label={translateLanguage(intl, 'dashboard.taskPlaceholder')}
               onChange={onChangeTaskName}
@@ -184,9 +130,11 @@ export function Dashboard({
               fullWidth
               onKeyDown={e => {
                 if (e.keyCode === 13) {
-                  inputRef.current.blur();
-                  setStartTimerClock(true);
-                  startTimer();
+                  taskInputRef.current.blur();
+                  if (!startTimerClock) {
+                    setStartTimerClock(true);
+                    startTimer();
+                  }
                 }
               }}
             />
@@ -200,21 +148,19 @@ export function Dashboard({
 
       {Object.keys(tasks)
         .reverse()
-        .map(d => (
-          // let cDate = getDate(d);
-
+        .map(date => (
           <div className={classes.timeLog}>
-            <DateComp date={d} tasks={tasks[d]} key={d} />
+            <DateComponent date={date} tasks={tasks[date]} key={date} />
             <TasksComponent
-              taskList={tasks[d]}
-              key={tasks[d]}
-              currentDate={d}
+              taskList={tasks[date]}
+              key={tasks[date]}
+              currentDate={date}
             />
           </div>
         ))}
     </div>
   );
-}
+};
 
 Dashboard.propTypes = {
   projects: PropTypes.array,
@@ -234,16 +180,15 @@ const mapStateToProps = createStructuredSelector({
   restartTaskData: makeRestartTaskData(),
 });
 
-function mapDispatchToProps(dispatch) {
-  return {
-    getProjects: () => dispatch(loadProjects()),
-    saveTask: (taskName, projectName, startTime, endTime) =>
-      dispatch(sortTask({ taskName, projectName, startTime, endTime })),
+const mapDispatchToProps = dispatch => ({
+  getProjects: () => dispatch(loadProjects()),
 
-    restartTaskCall: () =>
-      dispatch(restartTask({ taskName: undefined, project: undefined })),
-  };
-}
+  saveTask: (taskName, projectName, startTime, endTime) =>
+    dispatch(sortTask({ taskName, projectName, startTime, endTime })),
+
+  restartTaskCall: () =>
+    dispatch(restartTask({ taskName: undefined, project: undefined })),
+});
 
 const withConnect = connect(
   mapStateToProps,

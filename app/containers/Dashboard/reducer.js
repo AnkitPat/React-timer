@@ -35,12 +35,10 @@ const dashboardReducer = (state = initialState, action) =>
         draft.loading = false;
         draft.error = action.error;
         break;
-
       case SAVE_TASK_AFTER_SORT:
         draft.tasks = action.data;
         draft.restartTaskData = { taskName: undefined, project: undefined };
         break;
-
       case RESTART_TASK:
         draft.restartTaskData = {
           taskName: action.data.taskName,

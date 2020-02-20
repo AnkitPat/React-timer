@@ -171,6 +171,7 @@ function sortTasks(tasks, task) {
     } else {
       task = {
         ...task,
+        taskName: task.taskName.trim(),
         id: uuid(),
         duration: timeDifference(task.startTime, task.endTime),
         timer: [

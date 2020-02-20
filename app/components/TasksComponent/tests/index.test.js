@@ -2,7 +2,6 @@
  *
  * Tests for TasksComponent
  *
- * @see https://github.com/react-boilerplate/react-boilerplate/tree/master/docs/testing
  *
  */
 

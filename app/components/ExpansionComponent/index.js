@@ -1,6 +1,6 @@
 /**
  *
- * ExpansionComp
+ * Expansion Component with total time of sub-tasks and count of it
  *
  */
 
@@ -10,7 +10,6 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -30,111 +29,7 @@ import ProjectsList from '../ProjectsList';
 import { makeSelectProjects } from '../../containers/Dashboard/selectors';
 import { getProjects } from '../../containers/Dashboard/saga';
 import { formatTime, translateLanguage } from '../../utils';
-
-const useStyles = makeStyles(theme => ({
-  timeRecorder: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    [theme.breakpoints.up('md')]: {
-      flexWrap: 'nowrap',
-    },
-    [theme.breakpoints.up('lg')]: {
-      padding: `0 ${theme.spacing(1)}px`,
-    },
-  },
-  timeRecorderBox: {
-    padding: theme.spacing(1),
-  },
-  taskNameBox: {
-    width: 'calc(100% - 120px)',
-    maxWidth: 'calc(100% - 120px)',
-    flex: '0 0 calc(100% - 120px)',
-    [theme.breakpoints.up('sm')]: {
-      width: 'auto',
-      maxWidth: '100%',
-      flex: '1 0 auto',
-    },
-  },
-  projectBox: {
-    width: '120px',
-    maxWidth: '120px',
-    flex: '0 0 120px',
-    [theme.breakpoints.up('sm')]: {
-      width: '150px',
-      maxWidth: '150px',
-      flex: '0 0 150px',
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: '250px',
-      maxWidth: '250px',
-      flex: '0 0 250px',
-    },
-  },
-  timeSpinner: {
-    display: 'flex',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.secondary.contrastText,
-    padding: theme.spacing(0.5),
-    borderRadius: '4px',
-    fontSize: '12px',
-  },
-  startEndBox: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      order: '1',
-    },
-    [theme.breakpoints.up('md')]: {
-      order: '0',
-      width: 'auto',
-    },
-  },
-
-  divider: {
-    padding: theme.spacing(1),
-  },
-  timeStartEnd: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    whiteSpace: 'nowrap',
-    fontSize: '12px',
-    fontWeight: '300',
-    flexWrap: 'wrap',
-    color: theme.palette.primary.dark,
-    [theme.breakpoints.up('sm')]: {
-      justifyContent: 'flex-end',
-    },
-  },
-  timeStartEndBox: {
-    width: '100%',
-    padding: theme.spacing(0.25),
-    textAlign: 'right',
-  },
-  timeLogCounter: {
-    cursor: 'pointer',
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-    color: '#ffffff',
-    lineHeight: '1',
-    borderRadius: theme.spacing(0.5),
-  },
-  panelSummary: {
-    padding: 0,
-  },
-  btnOverlay: {
-    backgroundColor: 'rgba(0,0,0,.06)',
-  },
-  btnDelete: {
-    [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing(2),
-    },
-  },
-}));
+import { useStyles } from './index.styles';
 
 function ExpansionComp({
   task,
@@ -147,14 +42,21 @@ function ExpansionComp({
   modifyTaskProjectNameCall,
   intl,
 }) {
+  const inputRef = React.useRef();
   const classes = useStyles();
   const [project, setProject] = React.useState(task.projectName);
   const [taskName, setTaskName] = React.useState(task.taskName);
+  const projectListProps = {
+    loading,
+    projects,
+    project,
+    handleChange,
+  };
 
   useEffect(() => {
-    // When initial state username is not null, submit the form to load repos
     getProjects();
   }, []);
+
   const handleChange = event => {
     setProject(event.target.value);
     modifyTaskProjectNameCall(
@@ -165,14 +67,7 @@ function ExpansionComp({
       task.startTime,
     );
   };
-  const inputRef = React.useRef();
 
-  const projectListProps = {
-    loading,
-    projects,
-    project,
-    handleChange,
-  };
   return (
     <ExpansionPanelSummary
       className={classes.panelSummary}
@@ -250,7 +145,6 @@ function ExpansionComp({
               className={classes.btnDelete}
               aria-label="delete"
               onClick={() => {
-                console.log(currentDate);
                 deleteGroupTaskCall(task.id, currentDate);
               }}
             >
@@ -279,50 +173,49 @@ const mapStateToProps = createStructuredSelector({
   projects: makeSelectProjects(),
 });
 
-function mapDispatchToProps(dispatch) {
-  return {
-    getProjects: () => dispatch(loadProjects()),
+const mapDispatchToProps = dispatch => ({
+  getProjects: () => dispatch(loadProjects()),
 
-    restartTaskCall: (taskName, project) =>
-      dispatch(restartTask({ taskName, project })),
+  restartTaskCall: (taskName, project) =>
+    dispatch(restartTask({ taskName, project })),
 
-    deleteGroupTaskCall: (taskId, date) =>
-      dispatch(deleteGroupTask({ taskId, date })),
-    modifyTaskNameCall: (
-      taskId,
-      newTaskName,
-      currentDate,
-      isPartOfGroup,
-      startTime,
-    ) =>
-      dispatch(
-        modifyTaskName({
-          taskId,
-          newTaskName,
-          currentDate,
-          isPartOfGroup,
-          startTime,
-        }),
-      ),
+  deleteGroupTaskCall: (taskId, date) =>
+    dispatch(deleteGroupTask({ taskId, date })),
 
-    modifyTaskProjectNameCall: (
-      taskId,
-      newProjectName,
-      currentDate,
-      isPartOfGroup,
-      startTime,
-    ) =>
-      dispatch(
-        modifyTaskProjectName({
-          taskId,
-          newProjectName,
-          currentDate,
-          isPartOfGroup,
-          startTime,
-        }),
-      ),
-  };
-}
+  modifyTaskNameCall: (
+    taskId,
+    newTaskName,
+    currentDate,
+    isPartOfGroup,
+    startTime,
+  ) =>
+    dispatch(
+      modifyTaskName({
+        taskId,
+        newTaskName,
+        currentDate,
+        isPartOfGroup,
+        startTime,
+      }),
+    ),
+
+  modifyTaskProjectNameCall: (
+    taskId,
+    newProjectName,
+    currentDate,
+    isPartOfGroup,
+    startTime,
+  ) =>
+    dispatch(
+      modifyTaskProjectName({
+        taskId,
+        newProjectName,
+        currentDate,
+        isPartOfGroup,
+        startTime,
+      }),
+    ),
+});
 
 const withConnect = connect(
   mapStateToProps,

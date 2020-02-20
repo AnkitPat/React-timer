@@ -66,20 +66,21 @@ export const translateLanguage = (intl, languageKey) =>
 export const timeDifference = (start, end) =>
   msConversion(Math.abs(new Date(start) - new Date(end)));
 
+/* eslint-disable */
 export const addTimes = timers => {
   const times = [0, 0, 0];
   const max = times.length;
 
-  for (let j = 0; j < timers.length; j = j +1) {
+  for (let j = 0; j < timers.length; j += 1) {
     const b = (timers[j] || '').split(':');
 
     // normalize time values
-    for (let i = 0; i < max; i = i + 1) {
+    for (let i = 0; i < max; i += 1) {
       b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i]);
     }
 
     // store time values
-    for (let i = 0; i < max; i = i +1) {
+    for (let i = 0; i < max; i += 1) {
       times[i] = times[i] + b[i];
     }
   }
@@ -100,7 +101,9 @@ export const addTimes = timers => {
     minutes -= 60 * h;
   }
 
-  return `${`0${hours}`.slice(-2)}:${`0${minutes}`.slice(-2)}:${`0${seconds}`.slice(-2)}`;
+  return `${`0${hours}`.slice(-2)}:${`0${minutes}`.slice(
+    -2,
+  )}:${`0${seconds}`.slice(-2)}`;
 };
 
 export const substractTimes = (total, time) => {
@@ -109,13 +112,13 @@ export const substractTimes = (total, time) => {
 
   const a = (total || '').split(':');
   const b = (time || '').split(':');
-  for (var i = 0; i < max; i = i + 1) {
+  for (var i = 0; i < max; i += 1) {
     a[i] = isNaN(parseInt(a[i])) ? 0 : parseInt(a[i]);
     b[i] = isNaN(parseInt(b[i])) ? 0 : parseInt(b[i]);
   }
 
   // store time values
-  for (var i = 0; i < max; i = i+ 1) {
+  for (var i = 0; i < max; i += 1) {
     times[i] = a[i] - b[i];
   }
 
@@ -135,5 +138,7 @@ export const substractTimes = (total, time) => {
     minutes -= 60 * h;
   }
 
-  return `${`0${hours}`.slice(-2)}:${`0${minutes}`.slice(-2)}:${`0${seconds}`.slice(-2)}`;
+  return `${`0${hours}`.slice(-2)}:${`0${minutes}`.slice(
+    -2,
+  )}:${`0${seconds}`.slice(-2)}`;
 };
