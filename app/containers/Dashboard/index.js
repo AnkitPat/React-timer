@@ -181,7 +181,9 @@ const mapDispatchToProps = dispatch => ({
   getProjects: () => dispatch(loadProjects()),
 
   saveTask: (taskName, projectName, startTime, endTime) =>
-    dispatch(sortTask({ taskName, projectName, startTime, endTime })),
+    dispatch(
+      sortTask({ taskName: taskName.trim(), projectName, startTime, endTime }),
+    ),
 
   restartTaskCall: () =>
     dispatch(restartTask({ taskName: undefined, project: undefined })),

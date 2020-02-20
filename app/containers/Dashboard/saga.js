@@ -189,7 +189,7 @@ function sortTasks(tasks, task) {
   }
 
   tasks.sort(function(a, b) {
-    return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
+    return new Date(b.endTime).getTime() - new Date(a.endTime).getTime();
   });
   return tasks;
 }

@@ -53,6 +53,7 @@ function ExpansionComp({
   }, []);
 
   const handleChange = event => {
+    event.stopPropagation();
     setProject(event.target.value);
     modifyTaskProjectNameCall(
       task.id,
