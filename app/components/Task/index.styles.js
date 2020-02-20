@@ -7,7 +7,7 @@ export const useStyles = makeStyles(theme => ({
     width: '100%',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    background: 'transparent',
+    background: isPartOfGroup => (isPartOfGroup ? 'transparent' : '#ffffff'),
     [theme.breakpoints.up('md')]: {
       flexWrap: 'nowrap',
     },
@@ -62,8 +62,9 @@ export const useStyles = makeStyles(theme => ({
       order: '1',
     },
     [theme.breakpoints.up('md')]: {
-      order: '0',
+      order: 0,
       width: 'auto',
+      flex: 0,
     },
   },
   divider: {
@@ -83,9 +84,12 @@ export const useStyles = makeStyles(theme => ({
     },
   },
   timeStartEndBox: {
-    width: '100%',
+    width: 'auto',
     padding: theme.spacing(0.25),
     textAlign: 'right',
+    [theme.breakpoints.up('md')]: {
+      width: '100%',
+    },
   },
   timeLogCounter: {
     cursor: 'pointer',

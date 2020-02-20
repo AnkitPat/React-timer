@@ -17,7 +17,8 @@ import { IconButton } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { injectIntl } from 'react-intl';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import TimerIcon from '@material-ui/icons/Timer';
+import TimerOffIcon from '@material-ui/icons/TimerOff';
 import {
   loadProjects,
   restartTask,
@@ -76,7 +77,7 @@ function ExpansionComp({
       id="additional-actions1-header"
     >
       <Paper className={classes.timeRecorder} elevation={0} square>
-        <Box className={classes.timeRecorderBox}>
+        <Box className={[classes.timeRecorderBox, classes.counterBox]}>
           <div className={classes.timeLogCounter}>{task.timer.length}</div>
         </Box>
         <Box
@@ -117,10 +118,10 @@ function ExpansionComp({
         <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
           <div className={classes.timeStartEnd}>
             <div className={classes.timeStartEndBox}>
-              <AccessTimeIcon fontSize="small" /> {formatTime(task.startTime)}
+              <TimerIcon fontSize="small" /> {formatTime(task.startTime)}
             </div>
             <div className={classes.timeStartEndBox}>
-              <AccessTimeIcon fontSize="small" /> {formatTime(task.endTime)}
+              <TimerOffIcon fontSize="small" /> {formatTime(task.endTime)}
             </div>
           </div>
         </Box>

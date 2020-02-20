@@ -13,7 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import TimerIcon from '@material-ui/icons/Timer';
+import TimerOffIcon from '@material-ui/icons/TimerOff';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -46,7 +47,7 @@ function Task({
 }) {
   useInjectSaga({ key: 'dashboard', saga });
 
-  const classes = useStyles();
+  const classes = useStyles(isPartOfGroup);
   const inputRef = React.useRef();
   const [project, setProject] = React.useState(task.projectName);
   const [taskName, setTaskName] = React.useState(task.taskName);
@@ -109,10 +110,10 @@ function Task({
       <Box className={[classes.timeRecorderBox, classes.startEndBox]}>
         <div className={classes.timeStartEnd}>
           <div className={classes.timeStartEndBox}>
-            <AccessTimeIcon fontSize="small" /> {formatTime(task.startTime)}
+            <TimerIcon fontSize="small" /> {formatTime(task.startTime)}
           </div>
           <div className={classes.timeStartEndBox}>
-            <AccessTimeIcon fontSize="small" /> {formatTime(task.endTime)}
+            <TimerOffIcon fontSize="small" /> {formatTime(task.endTime)}
           </div>
         </div>
       </Box>

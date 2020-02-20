@@ -17,6 +17,14 @@ export const useStyles = makeStyles(theme => ({
   timeRecorderBox: {
     padding: theme.spacing(1),
   },
+  counterBox: {
+    [theme.breakpoints.down('xs')]: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      padding: 0,
+    },
+  },
   taskNameBox: {
     width: 'calc(100% - 120px)',
     maxWidth: 'calc(100% - 120px)',
@@ -58,8 +66,9 @@ export const useStyles = makeStyles(theme => ({
       order: '1',
     },
     [theme.breakpoints.up('md')]: {
-      order: '0',
+      order: 0,
       width: 'auto',
+      flex: 0,
     },
   },
 
@@ -80,9 +89,12 @@ export const useStyles = makeStyles(theme => ({
     },
   },
   timeStartEndBox: {
-    width: '100%',
+    width: 'auto',
     padding: theme.spacing(0.25),
     textAlign: 'right',
+    [theme.breakpoints.up('md')]: {
+      width: '100%',
+    },
   },
   timeLogCounter: {
     cursor: 'pointer',
@@ -91,6 +103,10 @@ export const useStyles = makeStyles(theme => ({
     color: '#ffffff',
     lineHeight: '1',
     borderRadius: theme.spacing(0.5),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(.5),
+      fontSize: '12px',
+    },
   },
   panelSummary: {
     padding: 0,
