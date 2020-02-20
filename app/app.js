@@ -21,6 +21,8 @@ import App from 'containers/App';
 
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import LoadingIndicator from './components/LoadingIndicator';
 
 // Load the favicon and the .htaccess file
 /* eslint-disable import/no-unresolved, import/extensions */
@@ -35,8 +37,7 @@ import { translationMessages } from './i18n';
 
 // Create redux store with history
 const initialState = {};
-const store = configureStore(initialState, history);
-
+const { store, persistor } = configureStore(initialState, history);
 // For testing purpose
 store.subscribe(() => {
   console.log('store: ', store.getState());
@@ -46,11 +47,13 @@ const MOUNT_NODE = document.getElementById('app');
 const render = messages => {
   ReactDOM.render(
     <Provider store={store}>
-      <LanguageProvider messages={messages}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </LanguageProvider>
+      <PersistGate loading={<LoadingIndicator />} persistor={persistor}>
+        <LanguageProvider messages={messages}>
+          <ConnectedRouter history={history}>
+            <App />
+          </ConnectedRouter>
+        </LanguageProvider>
+      </PersistGate>
     </Provider>,
     MOUNT_NODE,
   );

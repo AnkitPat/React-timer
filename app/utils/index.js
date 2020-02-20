@@ -13,7 +13,7 @@ export const formatDate = date => {
     'November',
     'December',
   ];
-
+  date = new Date(date);
   const day = date.getDate();
   const monthIndex = date.getMonth();
   const year = date.getFullYear();
@@ -22,6 +22,7 @@ export const formatDate = date => {
 };
 
 export const formatTime = date => {
+  date = new Date(date);
   let hour = date.getHours();
   let minutes = date.getMinutes();
   let seconds = date.getSeconds();

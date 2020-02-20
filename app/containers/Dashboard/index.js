@@ -11,7 +11,6 @@ import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
-import { useInjectReducer } from 'utils/injectReducer';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -23,7 +22,6 @@ import {
   makeSelectTasks,
   makeRestartTaskData,
 } from './selectors';
-import reducer from './reducer';
 import saga from './saga';
 import TaskTimer from '../../components/TaskTimer';
 import { loadProjects, sortTask, restartTask } from './actions';
@@ -43,7 +41,6 @@ export const Dashboard = ({
   restartTaskCall,
   intl,
 }) => {
-  useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
 
   const classes = useStyles();
@@ -167,7 +164,7 @@ Dashboard.propTypes = {
   getProjects: PropTypes.func,
   saveTask: PropTypes.func,
   loading: PropTypes.bool,
-  tasks: PropTypes.array,
+  tasks: PropTypes.any,
   restartTaskCall: PropTypes.func,
   restartTaskData: PropTypes.any,
   intl: PropTypes.any,
