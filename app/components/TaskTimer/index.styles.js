@@ -11,9 +11,9 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: 'rgba(0,0,0,.06)',
   },
   timeSpinner: {
+    color: theme.palette.primary.dark,
     [theme.breakpoints.up('lg')]: {
       fontSize: '24px',
-      color: theme.palette.primary.dark,
     },
   },
   btnDelete: {
