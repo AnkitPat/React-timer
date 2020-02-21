@@ -63,7 +63,7 @@ const TasksComponent = props => {
   return display.length > 0 ? (
     <div className={classes.timeLogPanel}>{display}</div>
   ) : (
-    <div />
+    <></>
   );
 };
 

@@ -52,10 +52,12 @@ export const Dashboard = ({
   const [enter, setEnter] = React.useState(false);
   const [restartTime, setRestartTime] = React.useState('');
 
+  // mehtod to fetch getProjects
   useEffect(() => {
     getProjects();
   });
 
+  // did update listening on restartTask
   useEffect(() => {
     if (
       !isEmpty(restartTaskData) &&

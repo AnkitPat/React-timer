@@ -34,6 +34,7 @@ const TaskTimer = ({
     timeOfStart: '',
   });
 
+  // did update method listening on unique & enter keys
   useEffect(() => {
     if (restart) {
       if (!time.status) {
@@ -47,6 +48,7 @@ const TaskTimer = ({
       });
     }
 
+    // listening on enter key clicks
     if (enter)
       setTime({
         startTime: new Date(),
@@ -58,6 +60,8 @@ const TaskTimer = ({
 
   /* eslint-disable */
 
+
+  // Did update method for listining on browser refresh and close tab
   useEffect(() => {
     if (!time.status || !timerStatus) {
       window.addEventListener('beforeunload', ev => {
@@ -72,22 +76,25 @@ const TaskTimer = ({
     }
   });
 
+  // method to be called on start of timer
   function startTimer() {
     timerStarted();
     setTime({ startTime: new Date(), status: false, restartValue: false });
   }
 
+  // method to be called on delete of timer
   function deleteTimer() {
     setTime({ ...time, status: true, restartValue: true });
     deleteTask();
   }
-
+  // method to be called on reset of timer
   const resetTimer = async (reset, stop) => {
     await setDeleteClick(true);
     stop();
     reset();
   };
 
+  // method to be called on stop of timer
   const stopTimer = (taskName, projectName, stopTimerInstance) => {
     setTime({ ...time, status: true, restartValue: true });
     if (!deleteClick) {
