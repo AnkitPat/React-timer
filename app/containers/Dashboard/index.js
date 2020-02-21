@@ -49,6 +49,7 @@ export const Dashboard = ({
   const [taskName, setTaskName] = React.useState('');
   const [timerStatus, setTimerStatus] = React.useState(true);
   const [startTimerClock, setStartTimerClock] = React.useState(false);
+  const [enter, setEnter] = React.useState(false);
   const [restartTime, setRestartTime] = React.useState('');
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export const Dashboard = ({
   const startTimer = event => {
     if (event !== undefined && event.preventDefault) event.preventDefault();
     setStartTimerClock(true);
-    setTimerStatus(true);
+    console.log('startTimer');
   };
 
   const onChangeTaskName = event => {
@@ -84,18 +85,28 @@ export const Dashboard = ({
   const deleteTask = () => {
     setTaskName('');
     setProject('');
+    console.log('delete taks');
+
     setTimerStatus(true);
+    setEnter(false);
+
     setStartTimerClock(false);
   };
 
-  const stopTask = (start, end) => {
-    setStartTimerClock(false);
-    setTimerStatus(false);
+  const stopTask = (start, end, stopTimerInstance) => {
+    if (stopTimerInstance) {
+      setStartTimerClock(false);
+
+      setTimerStatus(false);
+    }
+    setEnter(false);
     saveTask(taskName, project, start, end);
   };
 
   const timerStarted = () => {
     setStartTimerClock(true);
+    console.log('timer started');
+
     setTimerStatus(true);
   };
 
@@ -134,11 +145,14 @@ export const Dashboard = ({
               onChange={onChangeTaskName}
               value={taskName}
               fullWidth
-              onKeyDown={e => {
+              autoFocus
+              onKeyDown={async e => {
                 if (e.keyCode === 13) {
                   taskInputRef.current.blur();
                   if (!startTimerClock) {
+                    await setTimerStatus(false);
                     setStartTimerClock(true);
+                    setEnter(!enter);
                     startTimer();
                   }
                 }
@@ -153,6 +167,7 @@ export const Dashboard = ({
           {...timerProps}
           restart={startTimerClock}
           unique={restartTime}
+          enter={enter}
         />
       </Paper>
 

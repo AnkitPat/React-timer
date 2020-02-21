@@ -21,6 +21,7 @@ const TaskTimer = ({
   stopTask,
   restart,
   unique,
+  enter,
 }) => {
   const classes = useStyles();
   const [deleteClick, setDeleteClick] = useState(false);
@@ -32,7 +33,10 @@ const TaskTimer = ({
   });
 
   useEffect(() => {
-    if (time.restartValue && restart) {
+    if (restart) {
+      if (!time.status) {
+        stopTimer(false);
+      }
       setTime({
         startTime: new Date(),
         status: false,
@@ -40,11 +44,29 @@ const TaskTimer = ({
         timeOfStart: unique,
       });
     }
-  });
 
-  async function startTimer() {
+    if (enter)
+      setTime({
+        startTime: new Date(),
+        status: false,
+        restartValue: false,
+        timeOfStart: unique,
+      });
+
+    //   window.addEventListener("beforeunload", (ev) =>
+    // {
+
+    //     ev.preventDefault();
+
+    //     return ev.returnValue = alert('clossss');
+    //   stopTask(time.startTime, new Date(), true);
+
+    // });
+  }, [unique, enter]);
+
+  function startTimer() {
     timerStarted();
-    setTime({ startTime: new Date(), status: false, restartValue: true });
+    setTime({ startTime: new Date(), status: false, restartValue: false });
   }
 
   function deleteTimer() {
@@ -58,22 +80,27 @@ const TaskTimer = ({
     reset();
   };
 
-  const stopTimer = () => {
+  const stopTimer = stopTimerInstance => {
     setTime({ ...time, status: true, restartValue: true });
     if (!deleteClick) {
-      stopTask(time.startTime, new Date());
+      stopTask(time.startTime, new Date(), stopTimerInstance);
     }
     setDeleteClick(false);
-    deleteTimer();
+    if (stopTimerInstance) deleteTimer();
   };
 
+  console.log(time.status, timerStatus);
   return (
     <>
       <Timer
-        key={restart}
+        key={restart + unique}
         startImmediately={restart}
-        onStart={() => startTimer()}
-        onStop={() => stopTimer()}
+        onStart={() => {
+          console.log('called');
+
+          startTimer();
+        }}
+        onStop={() => stopTimer(true)}
         onReset={() => deleteTimer()}
         formatValue={value => `${value < 10 ? `0${value}` : value}`}
       >
@@ -129,8 +156,9 @@ TaskTimer.propTypes = {
   deleteTask: PropTypes.func,
   stopTask: PropTypes.func,
   restart: PropTypes.bool,
-  timerStarted: PropTypes.any,
+  timerStarted: PropTypes.func,
   unique: PropTypes.string,
+  enter: PropTypes.bool,
 };
 
 export default TaskTimer;
