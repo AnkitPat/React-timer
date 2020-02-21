@@ -57,13 +57,11 @@ export const Dashboard = ({
   });
 
   useEffect(() => {
-
     if (
       !isEmpty(restartTaskData) &&
       has(restartTaskData, 'taskName') &&
       restartTaskData.taskName !== null
     ) {
-
       setStartTimerClock(true);
       setRestartTime(new Date());
       restartTaskCall('', '');
@@ -71,7 +69,6 @@ export const Dashboard = ({
       setTimeout(() => {
         setTaskName(restartTaskData.taskName);
         setProject(restartTaskData.project);
-
       }, 0);
     }
   }, [restartTaskData]);
@@ -98,7 +95,13 @@ export const Dashboard = ({
     setStartTimerClock(false);
   };
 
-  const stopTask = (taskNameInternal, projectInternal, start, end, stopTimerInstance) => {
+  const stopTask = (
+    taskNameInternal,
+    projectInternal,
+    start,
+    end,
+    stopTimerInstance,
+  ) => {
     if (stopTimerInstance) {
       setStartTimerClock(false);
 
@@ -177,21 +180,23 @@ export const Dashboard = ({
         />
       </Paper>
 
-      {Object.keys(tasks)
-        .reverse()
-        .map(
-          date =>
-            tasks[date].length > 0 && (
-              <div className={classes.timeLog}>
-                <DateComponent date={date} tasks={tasks[date]} key={date} />
-                <TasksComponent
-                  taskList={tasks[date]}
-                  key={tasks[date]}
-                  currentDate={date}
-                />
-              </div>)
-        )
-      }
+      <div className={classes.timeLogWrapper}>
+        {Object.keys(tasks)
+          .reverse()
+          .map(
+            date =>
+              tasks[date].length > 0 && (
+                <div className={classes.timeLog}>
+                  <DateComponent date={date} tasks={tasks[date]} key={date} />
+                  <TasksComponent
+                    taskList={tasks[date]}
+                    key={tasks[date]}
+                    currentDate={date}
+                  />
+                </div>
+              ),
+          )}
+      </div>
     </div>
   );
 };

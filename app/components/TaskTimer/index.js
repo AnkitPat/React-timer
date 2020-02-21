@@ -23,7 +23,7 @@ const TaskTimer = ({
   unique,
   enter,
   taskName,
-  projectName
+  projectName,
 }) => {
   const classes = useStyles();
   const [deleteClick, setDeleteClick] = useState(false);
@@ -164,6 +164,8 @@ TaskTimer.propTypes = {
   timerStarted: PropTypes.func,
   unique: PropTypes.string,
   enter: PropTypes.bool,
+  taskName: PropTypes.string,
+  projectName: PropTypes.string,
 };
 
 export default TaskTimer;

@@ -4,6 +4,9 @@ export const useStyles = makeStyles(theme => ({
   timeRecorder: {
     display: 'flex',
     alignItems: 'center',
+    position: 'fixed',
+    top: 0,
+    zIndex: 9,
     width: '100%',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
@@ -45,6 +48,9 @@ export const useStyles = makeStyles(theme => ({
       maxWidth: '250px',
       flex: '0 0 250px',
     },
+  },
+  timeLogWrapper: {
+    paddingTop: '75px',
   },
   timeLog: {
     marginTop: theme.spacing(4),

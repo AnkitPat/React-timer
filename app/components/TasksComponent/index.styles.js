@@ -12,10 +12,6 @@ export const useStyles = makeStyles(theme => ({
   selectProject: {
     minWidth: '120px',
   },
-  timeLog: {
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(1),
-  },
   timeLogTop: {
     display: 'flex',
     alignItems: 'center',
