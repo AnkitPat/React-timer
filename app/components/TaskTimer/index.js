@@ -52,17 +52,23 @@ const TaskTimer = ({
         restartValue: false,
         timeOfStart: unique,
       });
-
-    //   window.addEventListener("beforeunload", (ev) =>
-    // {
-
-    //     ev.preventDefault();
-
-    //     return ev.returnValue = alert('clossss');
-    //   stopTask(time.startTime, new Date(), true);
-
-    // });
   }, [unique, enter]);
+
+  /* eslint-disable */
+
+  useEffect(() => {
+    if (!time.status || !timerStatus) {
+      window.addEventListener('beforeunload', ev => {
+        ev.preventDefault();
+        return (ev.returnValue = 'Are you sure you want to close?');
+      });
+    } else {
+      window.removeEventListener('beforeunload', ev => {
+        ev.preventDefault();
+        return (ev.returnValue = 'Are you sure you want to close?');
+      });
+    }
+  });
 
   function startTimer() {
     timerStarted();

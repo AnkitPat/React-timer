@@ -2,11 +2,18 @@
   "projects": [
     {
       "id": 1,
-      "name": "project 1"
+      "name": "No Project",
+      "value": ""
     },
     {
       "id": 2,
-      "name": "project 2"
+      "name": "Project 1",
+      "value": "Project 1"
+    },
+    {
+      "id": 3,
+      "name": "Project 2",
+      "value": "Project 2"
     }
   ]
 }

@@ -29,7 +29,7 @@ const ProjectList = ({ loading, projects, handleChange, project, intl }) => {
         className={classes.selectProject}
       >
         {projects.map(item => (
-          <MenuItem value={item.name} key={item.id}>
+          <MenuItem value={item.value} key={item.id}>
             {item.name}
           </MenuItem>
         ))}
