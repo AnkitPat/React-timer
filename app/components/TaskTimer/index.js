@@ -22,6 +22,8 @@ const TaskTimer = ({
   restart,
   unique,
   enter,
+  taskName,
+  projectName
 }) => {
   const classes = useStyles();
   const [deleteClick, setDeleteClick] = useState(false);
@@ -35,7 +37,7 @@ const TaskTimer = ({
   useEffect(() => {
     if (restart) {
       if (!time.status) {
-        stopTimer(false);
+        stopTimer(taskName, projectName, false);
       }
       setTime({
         startTime: new Date(),
@@ -86,27 +88,24 @@ const TaskTimer = ({
     reset();
   };
 
-  const stopTimer = stopTimerInstance => {
+  const stopTimer = (taskName, projectName, stopTimerInstance) => {
     setTime({ ...time, status: true, restartValue: true });
     if (!deleteClick) {
-      stopTask(time.startTime, new Date(), stopTimerInstance);
+      stopTask(taskName, projectName,time.startTime, new Date(), stopTimerInstance);
     }
     setDeleteClick(false);
     if (stopTimerInstance) deleteTimer();
   };
 
-  console.log(time.status, timerStatus);
   return (
     <>
       <Timer
         key={restart + unique}
         startImmediately={restart}
         onStart={() => {
-          console.log('called');
-
           startTimer();
         }}
-        onStop={() => stopTimer(true)}
+        onStop={() => stopTimer(taskName, projectName, true)}
         onReset={() => deleteTimer()}
         formatValue={value => `${value < 10 ? `0${value}` : value}`}
       >

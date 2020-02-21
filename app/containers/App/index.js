@@ -8,6 +8,9 @@
  */
 
 import React from 'react';
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/ie9';
+
 import { Switch, Route } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Dashboard from 'containers/Dashboard/Loadable';

@@ -99,14 +99,33 @@ export function* sortAndSaveTask(action) {
     const task = action.data;
     tasks = sortTasks(tasks, task);
 
+    let newTasks= deleteNoDateEntries(allTasks);
     // Save tasks to specific date
     yield put(
-      saveTaskAfterSort({ ...allTasks, [formatDate(new Date())]: tasks }),
+      saveTaskAfterSort({ ...newTasks, [formatDate(new Date())]: tasks }),
     );
   } catch (err) {
     console.error(err);
   }
 }
+
+/**
+ * Method to optimize dates with no entries
+ * @param {*} tasks 
+ * @param {*} task 
+ */
+
+ const deleteNoDateEntries = (allTasks) => {
+  let newTasks = {};
+  Object.keys(allTasks).map((date) => {
+    if (allTasks[date].length ===0) {
+      delete allTasks.date;
+    } else {
+      newTasks = {...newTasks, [date]: allTasks[date]}
+    }
+  });
+  return newTasks;
+ }
 
 /**
  * Method to sort tasks, merge them and divide them on conditions

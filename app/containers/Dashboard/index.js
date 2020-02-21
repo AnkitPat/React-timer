@@ -54,19 +54,27 @@ export const Dashboard = ({
 
   useEffect(() => {
     getProjects();
+  });
+
+  useEffect(() => {
 
     if (
       !isEmpty(restartTaskData) &&
       has(restartTaskData, 'taskName') &&
       restartTaskData.taskName !== null
     ) {
-      setTaskName(restartTaskData.taskName);
-      setProject(restartTaskData.project);
+
       setStartTimerClock(true);
       setRestartTime(new Date());
       restartTaskCall('', '');
+
+      setTimeout(() => {
+        setTaskName(restartTaskData.taskName);
+        setProject(restartTaskData.project);
+
+      }, 0);
     }
-  });
+  }, [restartTaskData]);
 
   const handleChange = event => {
     setProject(event.target.value);
@@ -75,7 +83,6 @@ export const Dashboard = ({
   const startTimer = event => {
     if (event !== undefined && event.preventDefault) event.preventDefault();
     setStartTimerClock(true);
-    console.log('startTimer');
   };
 
   const onChangeTaskName = event => {
@@ -85,28 +92,24 @@ export const Dashboard = ({
   const deleteTask = () => {
     setTaskName('');
     setProject('');
-    console.log('delete taks');
-
     setTimerStatus(true);
     setEnter(false);
 
     setStartTimerClock(false);
   };
 
-  const stopTask = (start, end, stopTimerInstance) => {
+  const stopTask = (taskNameInternal, projectInternal, start, end, stopTimerInstance) => {
     if (stopTimerInstance) {
       setStartTimerClock(false);
 
       setTimerStatus(false);
     }
     setEnter(false);
-    saveTask(taskName, project, start, end);
+    saveTask(taskNameInternal, projectInternal, start, end);
   };
 
   const timerStarted = () => {
     setStartTimerClock(true);
-    console.log('timer started');
-
     setTimerStatus(true);
   };
 
@@ -123,6 +126,7 @@ export const Dashboard = ({
     deleteTask,
     stopTask,
   };
+
   return (
     <div>
       <Helmet>
@@ -168,21 +172,26 @@ export const Dashboard = ({
           restart={startTimerClock}
           unique={restartTime}
           enter={enter}
+          taskName={taskName}
+          projectName={project}
         />
       </Paper>
 
       {Object.keys(tasks)
         .reverse()
-        .map(date => (
-          <div className={classes.timeLog}>
-            <DateComponent date={date} tasks={tasks[date]} key={date} />
-            <TasksComponent
-              taskList={tasks[date]}
-              key={tasks[date]}
-              currentDate={date}
-            />
-          </div>
-        ))}
+        .map(
+          date =>
+            tasks[date].length > 0 && (
+              <div className={classes.timeLog}>
+                <DateComponent date={date} tasks={tasks[date]} key={date} />
+                <TasksComponent
+                  taskList={tasks[date]}
+                  key={tasks[date]}
+                  currentDate={date}
+                />
+              </div>)
+        )
+      }
     </div>
   );
 };
