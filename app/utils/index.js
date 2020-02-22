@@ -1,25 +1,7 @@
-export const formatDate = date => {
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  date = new Date(date);
-  const day = date.getDate();
-  const monthIndex = date.getMonth();
-  const year = date.getFullYear();
-
-  return `${day} ${monthNames[monthIndex]} ${year}`;
-};
+import moment from 'moment/min/moment-with-locales';
+import 'moment/locale/zh-cn'; // import specified locale module
+import 'moment/locale/es';
+export const formatDate = date => moment(date).format('DD MMMM YYYY');
 
 export const formatTime = date => {
   date = new Date(date);

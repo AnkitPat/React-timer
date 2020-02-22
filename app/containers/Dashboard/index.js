@@ -56,7 +56,7 @@ export const Dashboard = ({
     if (
       !isEmpty(restartTaskData) &&
       has(restartTaskData, 'taskName') &&
-      restartTaskData.taskName !== undefined
+      restartTaskData.taskName !== null
     ) {
       setTaskName(restartTaskData.taskName);
       setProject(restartTaskData.project);
@@ -186,7 +186,7 @@ const mapDispatchToProps = dispatch => ({
     ),
 
   restartTaskCall: () =>
-    dispatch(restartTask({ taskName: undefined, project: undefined })),
+    dispatch(restartTask({ taskName: null, project: null })),
 });
 
 const withConnect = connect(

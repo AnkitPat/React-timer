@@ -17,7 +17,7 @@ export const initialState = {
   projects: [],
   error: false,
   tasks: {},
-  restartTaskData: { taskName: undefined, project: undefined },
+  restartTaskData: { taskName: null, project: null },
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -37,7 +37,7 @@ const dashboardReducer = (state = initialState, action) =>
         break;
       case SAVE_TASK_AFTER_SORT:
         draft.tasks = action.data;
-        draft.restartTaskData = { taskName: undefined, project: undefined };
+        draft.restartTaskData = { taskName: null, project: null };
         break;
       case RESTART_TASK:
         draft.restartTaskData = {

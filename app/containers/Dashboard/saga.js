@@ -1,6 +1,7 @@
 import { put, takeLatest } from '@redux-saga/core/effects';
 import { select } from 'redux-saga/effects';
 import { uuid } from 'uuidv4';
+import _ from 'lodash';
 import {
   projectsLoaded,
   projectLoadingError,
@@ -128,7 +129,6 @@ function sortTasks(tasks, task) {
       if (task.timer && task.timer.length > 1) {
         // if it has sub-tasks, merge it to existing sub-tasks
         internalTask.timer = internalTask.timer.concat(task.timer);
-        // internalTask.duration += task.duration;  ***
         internalTask.duration = addTimes([
           internalTask.duration,
           task.duration,
@@ -140,7 +140,6 @@ function sortTasks(tasks, task) {
           endTime: task.endTime,
           duration: timeDifference(task.startTime, task.endTime),
         });
-        // internalTask.duration += timeDifference(task.startTime, task.endTime); ***
 
         internalTask.duration = addTimes([
           internalTask.duration,
@@ -153,9 +152,7 @@ function sortTasks(tasks, task) {
     }
 
     // Sort the sub-tasks according to its start-time
-    internalTask.timer.sort(function(a, b) {
-      return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
-    });
+    internalTask.timer = _.sortBy(internalTask.timer, ['startTime']).reverse();
     internalTask.endTime = internalTask.timer[0].endTime;
     internalTask.startTime =
       internalTask.timer[internalTask.timer.length - 1].startTime;
@@ -164,33 +161,25 @@ function sortTasks(tasks, task) {
 
   // Condition if task is not present in existing list
   if (!taskExist) {
-    if (task.timer && task.timer.length > 1) {
-      task = {
-        ...task,
-      };
-    } else {
-      task = {
-        ...task,
-        taskName: task.taskName.trim(),
-        id: uuid(),
-        duration: timeDifference(task.startTime, task.endTime),
-        timer: [
-          {
-            startTime: task.startTime,
-            endTime: task.endTime,
-            duration: timeDifference(task.startTime, task.endTime),
-          },
-        ],
-      };
-    }
+    task = {
+      ...task,
+      taskName: task.taskName.trim(),
+      id: uuid(),
+      duration: timeDifference(task.startTime, task.endTime),
+      timer: [
+        {
+          startTime: task.startTime,
+          endTime: task.endTime,
+          duration: timeDifference(task.startTime, task.endTime),
+        },
+      ],
+    };
 
     // Concat task to existing list
     tasks = tasks.concat(task);
   }
+  tasks = _.sortBy(tasks, ['endTime']).reverse();
 
-  tasks.sort(function(a, b) {
-    return new Date(b.endTime).getTime() - new Date(a.endTime).getTime();
-  });
   return tasks;
 }
 
@@ -265,12 +254,7 @@ export function* deleteGroupTask(action) {
     const { taskId } = action.data;
 
     // if deletion is on Group task, just single filter it out
-    tasks = tasks.filter(internalTask => {
-      if (taskId === internalTask.id) {
-        return false;
-      }
-      return true;
-    });
+    tasks = tasks.filter(internalTask => !(taskId === internalTask.id));
 
     yield put(saveTaskAfterSort({ ...allTasks, [action.data.date]: tasks }));
   } catch (err) {
